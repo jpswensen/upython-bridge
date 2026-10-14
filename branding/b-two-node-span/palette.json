@@ -1,0 +1,104 @@
+{
+  "concept": "b-two-node-span (Span)",
+  "colors": {
+    "indigo-light": "#3F3AA3",
+    "indigo-dark": "#27246F",
+    "indigo-mid": "#332F89",
+    "mint": "#6FF2C4",
+    "banner-dark": "#1F1D5E",
+    "banner-light": "#E3FBF3",
+    "sidebar-dark": "#252526",
+    "sidebar-light": "#f3f3f3",
+    "glyph-on-dark": "#c5c5c5",
+    "glyph-on-light": "#424242",
+    "surface-white": "#ffffff",
+    "surface-near-black": "#1e1e1e"
+  },
+  "roles": {
+    "icon tile": "linear gradient indigo-light (top left) to indigo-dark (bottom right), 135 degrees, in mark.svg only",
+    "icon mark": "mint, flat",
+    "activitybar.svg / terminal-tab.svg": "no colour of their own (currentColor); the preview substitutes glyph-on-dark / glyph-on-light"
+  },
+  "pairs": [
+    {
+      "fg": "mint",
+      "bg": "indigo-light",
+      "use": "mark on the lightest part of the tile",
+      "required_min": 3.0,
+      "ratio": 6.47,
+      "pass": true
+    },
+    {
+      "fg": "mint",
+      "bg": "indigo-mid",
+      "use": "mark on the middle of the tile",
+      "required_min": 3.0,
+      "ratio": 7.95,
+      "pass": true
+    },
+    {
+      "fg": "mint",
+      "bg": "indigo-dark",
+      "use": "mark on the darkest part of the tile",
+      "required_min": 3.0,
+      "ratio": 9.68,
+      "pass": true
+    },
+    {
+      "fg": "glyph-on-dark",
+      "bg": "sidebar-dark",
+      "use": "activity-bar / terminal glyph, light-grey on a dark sidebar (preview colours, not read from a theme)",
+      "required_min": 3.0,
+      "ratio": 8.87,
+      "pass": true
+    },
+    {
+      "fg": "glyph-on-light",
+      "bg": "sidebar-light",
+      "use": "activity-bar / terminal glyph, dark-grey on a light sidebar (preview colours, not read from a theme)",
+      "required_min": 3.0,
+      "ratio": 9.06,
+      "pass": true
+    },
+    {
+      "fg": "indigo-light",
+      "bg": "surface-white",
+      "use": "tile edge on a white Marketplace surface (informational)",
+      "required_min": 0,
+      "ratio": 8.95,
+      "pass": null
+    },
+    {
+      "fg": "indigo-dark",
+      "bg": "surface-white",
+      "use": "tile edge on a white surface, darkest corner (informational)",
+      "required_min": 0,
+      "ratio": 13.39,
+      "pass": null
+    },
+    {
+      "fg": "indigo-light",
+      "bg": "surface-near-black",
+      "use": "tile edge on a near-black surface, lightest corner (informational)",
+      "required_min": 0,
+      "ratio": 1.86,
+      "pass": null
+    },
+    {
+      "fg": "indigo-dark",
+      "bg": "surface-near-black",
+      "use": "tile edge on a near-black surface, darkest corner (informational: low, see NOTES weaknesses)",
+      "required_min": 0,
+      "ratio": 1.24,
+      "pass": null
+    }
+  ],
+  "galleryBanner": {
+    "color": "#1F1D5E",
+    "theme": "dark",
+    "alternative": {
+      "color": "#E3FBF3",
+      "theme": "light"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+# Everything is excluded unless re-included below (RQ-DIST-1: one universal VSIX, no node_modules, no tests, no internal docs).
+**
+!package.json
+!README.md
+!LICENSE
+!NOTICE
+!THIRD_PARTY_NOTICES
+!dist/extension.js
+!media/**
+!bridge/**
+!resources/**
+bridge/**/__pycache__/**
+bridge/**/*.pyc
+**/.DS_Store
+bridge/**/tests/**
+bridge/**/test/**

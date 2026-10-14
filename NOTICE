@@ -1,0 +1,19 @@
+This product includes software developed by others. Licences are MIT unless stated.
+
+Artwork: the icons under media/ (icon.png, activitybar.svg, terminal-tab-*.svg, trash-danger-*.svg) are original work for this project, MIT, Copyright (c) 2026 the project owner.
+
+Ported or adapted (the sidebar layout, command set and some behaviour come from this extension):
+  MPY Workbench 0.3.2 - MIT - Copyright (c) 2025 Juan Daniel Bustillos Camargo
+
+Bundled into the extension at build time (esbuild, no node_modules in the VSIX):
+  jsonc-parser 3.3.1 - MIT - Copyright (c) Microsoft Corporation
+  ignore 7.0.12 - MIT - Copyright (c) 2013 Kael Zhang <i@kael.me>, contributors
+
+Shipped as files under bridge/vendor/ (unmodified; see THIRD_PARTY_NOTICES and bridge/vendor/licenses/):
+  pyserial 3.5 - BSD-3-Clause - Copyright (c) 2001-2020 Chris Liechti
+  mpremote 1.29.0 - MIT - Copyright (c) 2014-2025 Damien P. George and contributors
+  platformdirs 4.3.8 - MIT - Copyright (c) 2010-202x The platformdirs developers
+
+Shipped as files under resources/stubs/ (unmodified stock MicroPython typing stubs; licence texts in resources/stubs/LICENSES/):
+  micropython-stubs - MIT - Copyright (c) 2022 Jos Verlinde
+  typeshed (standard library overlay) - Apache-2.0 / MIT - Copyright (c) Python Software Foundation and typeshed contributors

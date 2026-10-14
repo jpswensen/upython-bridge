@@ -1,0 +1,7 @@
+# Every file is stored and checked out byte for byte, on every OS (no line-ending conversion, whatever core.autocrlf says):
+# the stub packs keep the CRLF line ends of the wheels they came from and are hashed in resources/stubs/MANIFEST.json, and a
+# VSIX built on Windows must contain the same bytes as one built on macOS.
+* -text
+
+*.png binary
+*.vsix binary

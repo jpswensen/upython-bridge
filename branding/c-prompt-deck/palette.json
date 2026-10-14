@@ -1,0 +1,85 @@
+{
+  "concept": "C - Prompt deck",
+  "colors": {
+    "graphite": "#2A2B30",
+    "coral": "#FF8A4C",
+    "sidebar-dark": "#252526",
+    "sidebar-light": "#F3F3F3",
+    "marketplace-dark": "#1E1E1E",
+    "white": "#FFFFFF",
+    "glyph-dark-theme-active": "#C5C5C5",
+    "glyph-dark-theme-inactive": "#858585",
+    "glyph-light-theme-active": "#424242",
+    "glyph-light-theme-inactive": "#616161"
+  },
+  "notes": {
+    "graphite": "Marketplace tile background and galleryBanner colour.",
+    "coral": "The only mark colour (orange-coral, not red). Used on the graphite tile only.",
+    "sidebar-dark": "Test background for the monochrome glyphs on a dark sidebar.",
+    "sidebar-light": "Test background for the monochrome glyphs on a light sidebar.",
+    "marketplace-dark": "Test background for the Marketplace icon on a dark surface.",
+    "glyph-*": "Stand-ins for the theme foreground colour that VS Code applies to the currentColor glyphs. The real colour comes from the user's theme."
+  },
+  "pairs": [
+    {
+      "fg": "coral",
+      "bg": "graphite",
+      "use": "mark inside the Marketplace tile (REQUIRED)",
+      "min": 3.0,
+      "ratio": 6.05
+    },
+    {
+      "fg": "glyph-dark-theme-active",
+      "bg": "sidebar-dark",
+      "use": "activity-bar / terminal-tab glyph, dark theme, active",
+      "min": 3.0,
+      "ratio": 8.87
+    },
+    {
+      "fg": "glyph-dark-theme-inactive",
+      "bg": "sidebar-dark",
+      "use": "activity-bar glyph, dark theme, inactive",
+      "min": 3.0,
+      "ratio": 4.15
+    },
+    {
+      "fg": "glyph-light-theme-active",
+      "bg": "sidebar-light",
+      "use": "activity-bar / terminal-tab glyph, light theme, active",
+      "min": 3.0,
+      "ratio": 9.06
+    },
+    {
+      "fg": "glyph-light-theme-inactive",
+      "bg": "sidebar-light",
+      "use": "activity-bar glyph, light theme, inactive",
+      "min": 3.0,
+      "ratio": 5.58
+    },
+    {
+      "fg": "graphite",
+      "bg": "white",
+      "use": "tile edge against a light Marketplace surface",
+      "min": 3.0,
+      "ratio": 14.13
+    },
+    {
+      "fg": "graphite",
+      "bg": "marketplace-dark",
+      "use": "tile edge against a dark Marketplace surface (informational: the tile blends in; the mark stays readable)",
+      "min": null,
+      "ratio": 1.18
+    },
+    {
+      "fg": "coral",
+      "bg": "white",
+      "use": "DO NOT USE: bare coral mark on white fails 3:1, so always keep the graphite tile",
+      "min": null,
+      "ratio": 2.34
+    }
+  ],
+  "galleryBanner": {
+    "color": "#2A2B30",
+    "theme": "dark"
+  }
+}

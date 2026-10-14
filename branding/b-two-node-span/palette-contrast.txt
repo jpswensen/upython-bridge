@@ -1,0 +1,9 @@
+PASS    6.47:1  need >= 3.0  mint #6FF2C4   on indigo-light #3F3AA3 mark on the lightest part of the tile
+PASS    7.95:1  need >= 3.0  mint #6FF2C4   on indigo-mid #332F89 mark on the middle of the tile
+PASS    9.68:1  need >= 3.0  mint #6FF2C4   on indigo-dark #27246F mark on the darkest part of the tile
+PASS    8.87:1  need >= 3.0  glyph-on-dark #c5c5c5 on sidebar-dark #252526 activity-bar / terminal glyph, light-grey on a dark sidebar (preview colours, not read from a theme)
+PASS    9.06:1  need >= 3.0  glyph-on-light #424242 on sidebar-light #f3f3f3 activity-bar / terminal glyph, dark-grey on a light sidebar (preview colours, not read from a theme)
+info    8.95:1  need >= -    indigo-light #3F3AA3 on surface-white #ffffff tile edge on a white Marketplace surface (informational)
+info   13.39:1  need >= -    indigo-dark #27246F on surface-white #ffffff tile edge on a white surface, darkest corner (informational)
+info    1.86:1  need >= -    indigo-light #3F3AA3 on surface-near-black #1e1e1e tile edge on a near-black surface, lightest corner (informational)
+info    1.24:1  need >= -    indigo-dark #27246F on surface-near-black #1e1e1e tile edge on a near-black surface, darkest corner (informational: low, see NOTES weaknesses)

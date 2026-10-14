@@ -1,0 +1,180 @@
+{
+  "schema": 1,
+  "generatedBy": "scripts/vendor-stubs.mjs",
+  "licence": "MIT (micropython-stubs, (c) 2022 Jos Verlinde); stdlib overlay derives from typeshed (Apache-2.0 / MIT), see LICENSES/",
+  "overrides": [
+    "os",
+    "sys",
+    "json",
+    "asyncio",
+    "io",
+    "collections",
+    "array",
+    "struct",
+    "ssl",
+    "_asyncio"
+  ],
+  "packs": [
+    {
+      "id": "esp32",
+      "kind": "port",
+      "package": "micropython-esp32-stubs",
+      "version": "1.29.0.post1",
+      "mpVersion": [
+        1,
+        29,
+        0
+      ],
+      "platforms": [
+        "esp32"
+      ],
+      "covers": "ESP32, ESP32-S2/S3/C3/C6 (all boards of the esp32 port)",
+      "wheel": "micropython_esp32_stubs-1.29.0.post1-py2.py3-none-any.whl",
+      "wheelSha256": "c0a72410b9924f51b520534de0dc7f1839ff8f108689aa1e935a0c2b9fcbd96b",
+      "files": 74,
+      "bytes": 454428,
+      "contentSha256": "3877c91053f15eb1e212b482e2969c949524e36443f8ff797433fb5eacbb3a17"
+    },
+    {
+      "id": "esp8266",
+      "kind": "port",
+      "package": "micropython-esp8266-stubs",
+      "version": "1.29.0.post1",
+      "mpVersion": [
+        1,
+        29,
+        0
+      ],
+      "platforms": [
+        "esp8266"
+      ],
+      "covers": "ESP8266",
+      "wheel": "micropython_esp8266_stubs-1.29.0.post1-py2.py3-none-any.whl",
+      "wheelSha256": "3437e07969e87b568c885a2dfe44f657876b6595815b77047f4a838884b32535",
+      "files": 70,
+      "bytes": 321624,
+      "contentSha256": "1e31640e05533e11b9d7c1a7997ded296fa04ddb4c76471bd3344a9205e764f6"
+    },
+    {
+      "id": "rp2",
+      "kind": "port",
+      "package": "micropython-rp2-stubs",
+      "version": "1.29.0.post1",
+      "mpVersion": [
+        1,
+        29,
+        0
+      ],
+      "platforms": [
+        "rp2"
+      ],
+      "covers": "Raspberry Pi RP2040 / RP2350 (Pico, Pico W, ...)",
+      "wheel": "micropython_rp2_stubs-1.29.0.post1-py2.py3-none-any.whl",
+      "wheelSha256": "a26183e4ef7557469fd3387677a8e08cf1bc856a6cbe13acc773e57e94f0625c",
+      "files": 76,
+      "bytes": 430290,
+      "contentSha256": "77e82f22e1d12d1a6cfa935792e22f18d052c8b5d77c851049d438720a60897c"
+    },
+    {
+      "id": "stm32",
+      "kind": "port",
+      "package": "micropython-stm32-stubs",
+      "version": "1.29.0.post1",
+      "mpVersion": [
+        1,
+        29,
+        0
+      ],
+      "platforms": [
+        "pyboard",
+        "stm32"
+      ],
+      "covers": "STM32 boards (pyboard, Nucleo, Discovery, ...)",
+      "wheel": "micropython_stm32_stubs-1.29.0.post1-py2.py3-none-any.whl",
+      "wheelSha256": "57ab8e4c2f9b5e1b77e6fad97ba25c6547a679a23c898d616c9a7f5b16dcb4eb",
+      "files": 50,
+      "bytes": 541766,
+      "contentSha256": "ed84127fd66ab13bd1b6546ac285e9a86a7ac80ff19943fa091a366fbdd42bb4"
+    },
+    {
+      "id": "samd",
+      "kind": "port",
+      "package": "micropython-samd-stubs",
+      "version": "1.29.0.post1",
+      "mpVersion": [
+        1,
+        29,
+        0
+      ],
+      "platforms": [
+        "samd"
+      ],
+      "covers": "Microchip SAMD21 / SAMD51",
+      "wheel": "micropython_samd_stubs-1.29.0.post1-py2.py3-none-any.whl",
+      "wheelSha256": "59c0824adc05b7fa0bc0e6982ca875c9bbe76ffeb4d39cbf05bfd922f3e0b7d1",
+      "files": 45,
+      "bytes": 251836,
+      "contentSha256": "c1541f9282a68d3f94f59d13639e0218daaaa482e7102a1e0e9541541b06998a"
+    },
+    {
+      "id": "nrf",
+      "kind": "port",
+      "package": "micropython-nrf-stubs",
+      "version": "1.29.0.post1",
+      "mpVersion": [
+        1,
+        29,
+        0
+      ],
+      "platforms": [
+        "nrf"
+      ],
+      "covers": "Nordic nRF51 / nRF52 / nRF91",
+      "wheel": "micropython_nrf_stubs-1.29.0.post1-py2.py3-none-any.whl",
+      "wheelSha256": "043a6ffda6033a4a3ed3bd5369c8c347f8f5974ed9dbcc1318c1e64fc79e7942",
+      "files": 47,
+      "bytes": 227364,
+      "contentSha256": "7d4b1d9a835661b2739b696618d33c5b1a0fe139e5dabb50014244b29a627470"
+    },
+    {
+      "id": "mimxrt",
+      "kind": "port",
+      "package": "micropython-mimxrt-stubs",
+      "version": "1.26.1.post1",
+      "mpVersion": [
+        1,
+        26,
+        1
+      ],
+      "platforms": [
+        "mimxrt"
+      ],
+      "covers": "NXP i.MX RT (Teensy 4.x, ...); newest release PyPI has for this port",
+      "wheel": "micropython_mimxrt_stubs-1.26.1.post1-py2.py3-none-any.whl",
+      "wheelSha256": "e585bdd419428a8da538221889e0ff47220709d56ed982fb000c5110318d7083",
+      "files": 60,
+      "bytes": 287200,
+      "contentSha256": "fde8d5f35410a1c71c8558f4ebe6c9b5d256094abeaf40085b8e01939cd22717"
+    },
+    {
+      "id": "stdlib",
+      "kind": "overlay",
+      "package": "micropython-stdlib-stubs",
+      "version": "1.29.0.post2",
+      "mpVersion": [
+        1,
+        29,
+        0
+      ],
+      "platforms": [],
+      "covers": "shared overlay for every pack, and the whole pack for boards of an unknown port",
+      "wheel": "micropython_stdlib_stubs-1.29.0.post2-py3-none-any.whl",
+      "wheelSha256": "bdcd54d9896d8e1d455b3a99995d82a8399e1e2c9cb94eacabe278e5c2397783",
+      "files": 54,
+      "bytes": 330690,
+      "contentSha256": "0e162f9c21fe0e9c458410aa4bb9316569c2b4bafedb24cdf68122114b61d0f0"
+    }
+  ],
+  "totalBytes": 2845198,
+  "licenceBytes": 13986
+}

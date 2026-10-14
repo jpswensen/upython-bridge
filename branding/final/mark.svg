@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+<title>uPy Bridge mark: the letter mu drawn as a suspension bridge</title>
+<rect width="512" height="512" rx="112" fill="#2A7A8B"/>
+<rect x="10" y="10" width="492" height="492" rx="102" fill="#0E5968"/>
+<g transform="translate(22 22) scale(19.5)">
+<g fill="#FFF1D6"><rect x="8.65" y="11" width="1.5" height="4.2"/><rect x="11.05" y="11" width="1.5" height="4.2"/><rect x="13.45" y="11" width="1.5" height="4.2"/><path d="M9,15H21A1,1 0 0 1 21,17H9A1,1 0 0 1 9,15Z"/></g>
+<path fill="#FFB347" d="M2,3A1,1 0 0 1 3,2H4A1,1 0 0 1 5,3V6A4,4 0 0 0 9,10H12A4,4 0 0 0 16,6V3A1,1 0 0 1 17,2H18A1,1 0 0 1 19,3V17H16V10.47A6,6 0 0 1 12,12H9A6,6 0 0 1 5,10.47V21A1,1 0 0 1 4,22H3A1,1 0 0 1 2,21Z"/>
+</g>
+</svg>

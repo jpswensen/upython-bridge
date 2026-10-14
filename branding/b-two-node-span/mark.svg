@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+<title>uPython Bridge mark</title>
+<defs><linearGradient id="tile" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3F3AA3"/><stop offset="1" stop-color="#27246F"/></linearGradient></defs>
+<rect width="512" height="512" rx="112" fill="url(#tile)"/>
+<g fill="#6FF2C4">
+<path fill-rule="evenodd" d="M82 168h36a30 30 0 0 1 30 30v134a8 8 0 0 1 -8 8h-58a30 30 0 0 1 -30 -30v-112a30 30 0 0 1 30 -30ZM84 234h32a10 10 0 0 1 10 10v36a10 10 0 0 1 -10 10h-32a10 10 0 0 1 -10 -10v-36a10 10 0 0 1 10 -10Z"/>
+<path d="M372 168h74a14 14 0 0 1 14 14V227h-20a6 6 0 0 0 -6 6v42a6 6 0 0 0 6 6h20V326a14 14 0 0 1 -14 14h-74a8 8 0 0 1 -8 -8V176a8 8 0 0 1 8 -8Z"/>
+<path d="M138 314h236v26h-236Z"/>
+<path d="M100 168Q256 300 412 168V194Q256 326 100 194Z"/>
+<path d="M181 235.9h22v80.1h-22Z"/>
+<path d="M245 247h22v69h-22Z"/>
+<path d="M309 235.9h22v80.1h-22Z"/>
+</g>
+</svg>

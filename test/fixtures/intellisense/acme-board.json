@@ -1,0 +1,49 @@
+{
+  "comment": "A made-up custom firmware as the bridge reports it (introspect.modules / fs.list / fs.get answers): frozen package acme with submodules motor and pins, C module _acme, frozen acme_extra (the local typings/acme_extra.pyi wins), /lib/helper.py on the board. Used by test/unit/intellisense/board*.test.ts, test/unit/intellisense-ui/board.test.ts and scripts/verify-intellisense.mjs.",
+  "board": { "impl": "micropython", "version": [1, 29, 0], "machine": "Acme Motor Controller with ESP32", "build": "ACME_BOARD", "platform": "esp32", "uniqueId": "84f3eb70aa01" },
+  "syspath": ["", ".frozen", "/lib"],
+  "listing": [
+    "__main__", "_acme", "_asyncio", "_boot", "_espnow", "_onewire", "_thread", "_webrepl", "acme/__init__", "acme/motor", "acme/pins", "acme_extra",
+    "aioespnow", "apa106", "array", "asyncio/__init__", "asyncio/core", "binascii", "bluetooth", "btree", "builtins", "cmath", "collections", "cryptolib",
+    "deflate", "dht", "ds18x20", "errno", "esp", "esp32", "espnow", "flashbdev", "framebuf", "gc", "hashlib", "heapq", "inisetup", "io", "json",
+    "machine", "math", "micropython", "mip/__init__", "neopixel", "network", "ntptime", "onewire", "os", "platform", "random", "re",
+    "requests/__init__", "select", "socket", "ssl", "struct", "sys", "time", "tls", "uctypes", "umqtt/robust", "umqtt/simple", "upysh",
+    "urequests", "vfs", "webrepl", "webrepl_setup", "websocket"
+  ],
+  "modules": {
+    "acme": {
+      "attrs": ["ABI", "Motor", "_acme", "extra", "info", "motor", "pins", "class"],
+      "kinds": { "ABI": "int", "Motor": "class", "_acme": "module", "extra": "module", "info": "function", "motor": "module", "pins": "module", "class": "int" },
+      "consts": { "ABI": 3, "class": 1 },
+      "classes": { "Motor": { "members": ["MAX_SPEED", "gains", "run", "speed", "stop"], "kinds": { "MAX_SPEED": "int", "gains": "function", "run": "function", "speed": "property", "stop": "function" } } },
+      "file": "acme/__init__.py"
+    },
+    "acme.motor": {
+      "attrs": ["Motor", "_acme"],
+      "kinds": { "Motor": "class", "_acme": "module" },
+      "classes": { "Motor": { "members": ["MAX_SPEED", "gains", "run", "speed", "stop"], "kinds": { "MAX_SPEED": "int", "gains": "function", "run": "function", "speed": "property", "stop": "function" } } },
+      "file": "acme/motor.py"
+    },
+    "acme.pins": {
+      "attrs": ["LED", "MOT1", "MOT2", "NAME"],
+      "kinds": { "LED": "int", "MOT1": "int", "MOT2": "int", "NAME": "str" },
+      "consts": { "LED": 2, "MOT1": 12, "MOT2": 13, "NAME": "acme pins\nv1" },
+      "file": "acme/pins.py"
+    },
+    "acme.extra": {
+      "attrs": ["GAIN", "scale"],
+      "kinds": { "GAIN": "float", "scale": "function" },
+      "consts": { "GAIN": 1.5 },
+      "file": "acme/extra.py"
+    },
+    "_acme": {
+      "attrs": ["ENABLED", "Encoder", "LIMIT", "VERSION", "get_speed", "set_speed", "9bad", "lambda"],
+      "kinds": { "ENABLED": "bool", "Encoder": "class", "LIMIT": "int", "VERSION": "str", "get_speed": "function", "set_speed": "function", "lambda": "function" },
+      "consts": { "ENABLED": true, "LIMIT": 100, "VERSION": "1.2.0" },
+      "classes": { "Encoder": { "members": ["read", "reset", "set_limit"], "kinds": { "read": "function", "reset": "function", "set_limit": "function" } } }
+    }
+  },
+  "files": {
+    "/lib/helper.py": "\"\"\"Helpers that live on the board in /lib.\"\"\"\n\n\ndef blink(times: int, delay: float = 0.1) -> int:\n    return times\n"
+  }
+}

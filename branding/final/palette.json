@@ -1,0 +1,155 @@
+{
+  "brand": "uPython Bridge (display name with Greek mu; short form uPy Bridge; id upython-bridge)",
+  "colors": {
+    "tile-teal": "#0E5968",
+    "tile-rim": "#2A7A8B",
+    "bridge-amber": "#FFB347",
+    "deck-cream": "#FFF1D6",
+    "banner-title": "#FFFFFF",
+    "banner-subtitle": "#CDE7EC",
+    "terminal-light": "#424242",
+    "terminal-dark": "#C5C5C5",
+    "danger-light": "#D13438",
+    "danger-dark": "#F48771",
+    "surface-white": "#FFFFFF",
+    "surface-near-black": "#1E1E1E",
+    "vscode-sidebar-dark": "#252526",
+    "vscode-sidebar-light": "#F3F3F3",
+    "glyph-on-dark": "#CCCCCC",
+    "glyph-on-light": "#616161"
+  },
+  "pairs": [
+    {
+      "fg": "bridge-amber",
+      "bg": "tile-teal",
+      "min": 3.0,
+      "use": "towers and cable of the mark on the tile",
+      "ratio": 4.45,
+      "pass": true
+    },
+    {
+      "fg": "deck-cream",
+      "bg": "tile-teal",
+      "min": 3.0,
+      "use": "deck and hangers of the mark on the tile",
+      "ratio": 7.1,
+      "pass": true
+    },
+    {
+      "fg": "tile-teal",
+      "bg": "surface-white",
+      "min": 3.0,
+      "use": "tile edge against a light Marketplace surface",
+      "ratio": 7.93,
+      "pass": true
+    },
+    {
+      "fg": "tile-rim",
+      "bg": "surface-near-black",
+      "min": 3.0,
+      "use": "tile rim against a dark surface (fix for the 2.1:1 plain-tile edge)",
+      "ratio": 3.38,
+      "pass": true
+    },
+    {
+      "fg": "tile-rim",
+      "bg": "vscode-sidebar-dark",
+      "min": 3.0,
+      "use": "tile rim against the dark sidebar colour",
+      "ratio": 3.1,
+      "pass": true
+    },
+    {
+      "fg": "tile-teal",
+      "bg": "surface-near-black",
+      "min": 1.0,
+      "use": "plain tile edge without the rim, dark surface (informational: why the rim exists)",
+      "ratio": 2.1,
+      "pass": true
+    },
+    {
+      "fg": "glyph-on-dark",
+      "bg": "vscode-sidebar-dark",
+      "min": 3.0,
+      "use": "activity-bar glyph, typical dark theme",
+      "ratio": 9.54,
+      "pass": true
+    },
+    {
+      "fg": "glyph-on-light",
+      "bg": "vscode-sidebar-light",
+      "min": 3.0,
+      "use": "activity-bar glyph, typical light theme",
+      "ratio": 5.58,
+      "pass": true
+    },
+    {
+      "fg": "terminal-light",
+      "bg": "surface-white",
+      "min": 3.0,
+      "use": "terminal-tab icon, light theme",
+      "ratio": 10.05,
+      "pass": true
+    },
+    {
+      "fg": "terminal-dark",
+      "bg": "surface-near-black",
+      "min": 3.0,
+      "use": "terminal-tab icon, dark theme",
+      "ratio": 9.66,
+      "pass": true
+    },
+    {
+      "fg": "danger-light",
+      "bg": "surface-white",
+      "min": 3.0,
+      "use": "trash icon, light theme, white surface",
+      "ratio": 4.93,
+      "pass": true
+    },
+    {
+      "fg": "danger-light",
+      "bg": "vscode-sidebar-light",
+      "min": 3.0,
+      "use": "trash icon, light theme, sidebar",
+      "ratio": 4.44,
+      "pass": true
+    },
+    {
+      "fg": "danger-dark",
+      "bg": "vscode-sidebar-dark",
+      "min": 3.0,
+      "use": "trash icon, dark theme, sidebar",
+      "ratio": 6.24,
+      "pass": true
+    },
+    {
+      "fg": "danger-dark",
+      "bg": "surface-near-black",
+      "min": 3.0,
+      "use": "trash icon, dark theme, editor/panel surface",
+      "ratio": 6.79,
+      "pass": true
+    },
+    {
+      "fg": "banner-title",
+      "bg": "tile-teal",
+      "min": 4.5,
+      "use": "banner title text",
+      "ratio": 7.93,
+      "pass": true
+    },
+    {
+      "fg": "banner-subtitle",
+      "bg": "tile-teal",
+      "min": 4.5,
+      "use": "banner subtitle text",
+      "ratio": 6.13,
+      "pass": true
+    }
+  ],
+  "galleryBanner": {
+    "color": "#0E5968",
+    "theme": "dark"
+  }
+}

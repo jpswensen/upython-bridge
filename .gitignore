@@ -1,0 +1,29 @@
+# Dependencies and build output: `npm ci` and `npm run package` recreate them.
+node_modules/
+dist/
+out/
+*.vsix
+coverage/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Output of test and hardware runs (generated; can hold local paths and copies of board files).
+tools/vscode_test/reports/
+tools/hwtest/reports/
+tools/hwtest/backup/
+tools/hwkit/reports/
+
+# Board- and course-specific material stays on the instructor's machine (private/wsu/README.md).
+private/
+
+# Personal Claude Code settings
+.claude/settings.local.json
+CLAUDE.local.md
+
+# Operating system files
+.DS_Store
+Thumbs.db

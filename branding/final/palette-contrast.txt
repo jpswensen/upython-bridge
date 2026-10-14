@@ -1,0 +1,17 @@
+foreground       on background             ratio    min  use
+bridge-amber     on tile-teal               4.45    3.0  towers and cable of the mark on the tile
+deck-cream       on tile-teal               7.10    3.0  deck and hangers of the mark on the tile
+tile-teal        on surface-white           7.93    3.0  tile edge against a light Marketplace surface
+tile-rim         on surface-near-black      3.38    3.0  tile rim against a dark surface (fix for the 2.1:1 plain-tile edge)
+tile-rim         on vscode-sidebar-dark     3.10    3.0  tile rim against the dark sidebar colour
+tile-teal        on surface-near-black      2.10    1.0  plain tile edge without the rim, dark surface (informational: why the rim exists)
+glyph-on-dark    on vscode-sidebar-dark     9.54    3.0  activity-bar glyph, typical dark theme
+glyph-on-light   on vscode-sidebar-light    5.58    3.0  activity-bar glyph, typical light theme
+terminal-light   on surface-white          10.05    3.0  terminal-tab icon, light theme
+terminal-dark    on surface-near-black      9.66    3.0  terminal-tab icon, dark theme
+danger-light     on surface-white           4.93    3.0  trash icon, light theme, white surface
+danger-light     on vscode-sidebar-light    4.44    3.0  trash icon, light theme, sidebar
+danger-dark      on vscode-sidebar-dark     6.24    3.0  trash icon, dark theme, sidebar
+danger-dark      on surface-near-black      6.79    3.0  trash icon, dark theme, editor/panel surface
+banner-title     on tile-teal               7.93    4.5  banner title text
+banner-subtitle  on tile-teal               6.13    4.5  banner subtitle text

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" width="1280" height="640">
+<rect width="1280" height="640" fill="#0E5968"/>
+<g transform="translate(70 80) scale(20)">
+<g fill="#FFF1D6"><rect x="8.65" y="11" width="1.5" height="4.2"/><rect x="11.05" y="11" width="1.5" height="4.2"/><rect x="13.45" y="11" width="1.5" height="4.2"/><path d="M9,15H21A1,1 0 0 1 21,17H9A1,1 0 0 1 9,15Z"/></g>
+<path fill="#FFB347" d="M2,3A1,1 0 0 1 3,2H4A1,1 0 0 1 5,3V6A4,4 0 0 0 9,10H12A4,4 0 0 0 16,6V3A1,1 0 0 1 17,2H18A1,1 0 0 1 19,3V17H16V10.47A6,6 0 0 1 12,12H9A6,6 0 0 1 5,10.47V21A1,1 0 0 1 4,22H3A1,1 0 0 1 2,21Z"/>
+</g>
+<g font-family="Helvetica Neue, Helvetica, Arial, sans-serif">
+<text x="560" y="295" font-size="84" font-weight="700" fill="#FFFFFF">&#956;Python Bridge</text>
+<text x="563" y="363" font-size="34" font-weight="400" fill="#CDE7EC">Run, stop and sync your MicroPython</text>
+<text x="563" y="407" font-size="34" font-weight="400" fill="#CDE7EC">board from VS Code</text>
+</g>
+</svg>

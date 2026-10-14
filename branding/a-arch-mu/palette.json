@@ -1,0 +1,68 @@
+{
+  "concept": "A - Arch mu (mu as a suspension bridge)",
+  "colors": {
+    "tile-teal": "#0E5968",
+    "bridge-amber": "#FFB347",
+    "deck-cream": "#FFF1D6",
+    "surface-white": "#FFFFFF",
+    "surface-near-black": "#1E1E1E",
+    "vscode-sidebar-dark": "#252526",
+    "vscode-sidebar-light": "#F3F3F3",
+    "glyph-on-dark": "#CCCCCC",
+    "glyph-on-light": "#616161"
+  },
+  "pairs": [
+    {
+      "fg": "bridge-amber",
+      "bg": "tile-teal",
+      "min": 3.0,
+      "use": "towers and cable of the mark on the tile",
+      "ratio": 4.45,
+      "pass": true
+    },
+    {
+      "fg": "deck-cream",
+      "bg": "tile-teal",
+      "min": 3.0,
+      "use": "deck and hangers of the mark on the tile",
+      "ratio": 7.1,
+      "pass": true
+    },
+    {
+      "fg": "glyph-on-dark",
+      "bg": "vscode-sidebar-dark",
+      "min": 3.0,
+      "use": "activity-bar / terminal glyph, dark sidebar (typical VS Code foreground)",
+      "ratio": 9.54,
+      "pass": true
+    },
+    {
+      "fg": "glyph-on-light",
+      "bg": "vscode-sidebar-light",
+      "min": 3.0,
+      "use": "activity-bar / terminal glyph, light sidebar (typical VS Code foreground)",
+      "ratio": 5.58,
+      "pass": true
+    },
+    {
+      "fg": "tile-teal",
+      "bg": "surface-white",
+      "min": 3.0,
+      "use": "tile edge against a light Marketplace surface",
+      "ratio": 7.93,
+      "pass": true
+    },
+    {
+      "fg": "tile-teal",
+      "bg": "surface-near-black",
+      "min": 1.0,
+      "use": "tile edge against a dark Marketplace surface (informational, not a rule)",
+      "ratio": 2.1,
+      "pass": true
+    }
+  ],
+  "galleryBanner": {
+    "color": "#0E5968",
+    "theme": "dark"
+  }
+}

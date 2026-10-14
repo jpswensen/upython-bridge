@@ -1,0 +1,10 @@
+WCAG contrast ratios (relative luminance formula, sRGB)
+
+coral #FF8A4C                on graphite #2A2B30    6.05 : 1  PASS (>= 3.0)  mark inside the Marketplace tile (REQUIRED)
+glyph-dark-theme-active #C5C5C5 on sidebar-dark #252526   8.87 : 1  PASS (>= 3.0)  activity-bar / terminal-tab glyph, dark theme, active
+glyph-dark-theme-inactive #858585 on sidebar-dark #252526   4.15 : 1  PASS (>= 3.0)  activity-bar glyph, dark theme, inactive
+glyph-light-theme-active #424242 on sidebar-light #F3F3F3   9.06 : 1  PASS (>= 3.0)  activity-bar / terminal-tab glyph, light theme, active
+glyph-light-theme-inactive #616161 on sidebar-light #F3F3F3   5.58 : 1  PASS (>= 3.0)  activity-bar glyph, light theme, inactive
+graphite #2A2B30             on white #FFFFFF      14.13 : 1  PASS (>= 3.0)  tile edge against a light Marketplace surface
+graphite #2A2B30             on marketplace-dark #1E1E1E   1.18 : 1  info           tile edge against a dark Marketplace surface (informational: the tile blends in; the mark stays readable)
+coral #FF8A4C                on white #FFFFFF       2.34 : 1  info           DO NOT USE: bare coral mark on white fails 3:1, so always keep the graphite tile

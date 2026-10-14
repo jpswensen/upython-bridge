@@ -1,0 +1,576 @@
+{
+  "name": "upython-bridge",
+  "displayName": "μPython Bridge",
+  "description": "Run MicroPython programs, use the board REPL, keep your files in sync and get IntelliSense for boards running MicroPython, from VS Code.",
+  "version": "0.1.0",
+  "publisher": "jpswensen",
+  "icon": "media/icon.png",
+  "galleryBanner": {
+    "color": "#0E5968",
+    "theme": "dark"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jpswensen/upython-bridge.git"
+  },
+  "homepage": "https://github.com/jpswensen/upython-bridge#readme",
+  "bugs": {
+    "url": "https://github.com/jpswensen/upython-bridge/issues"
+  },
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "extensionKind": [
+    "workspace"
+  ],
+  "categories": [
+    "Education",
+    "Other"
+  ],
+  "keywords": [
+    "micropython",
+    "upython",
+    "esp32",
+    "rp2040",
+    "pico",
+    "repl",
+    "serial",
+    "intellisense",
+    "education"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": "limited",
+      "description": "In Restricted Mode the saved Python path and serial port of the workspace are ignored, so nothing from an untrusted folder is run. Trust the folder to use everything.",
+      "restrictedConfigurations": [
+        "upy-bridge.pythonPath",
+        "upy-bridge.port"
+      ]
+    }
+  },
+  "activationEvents": [
+    "onView:upy-bridgeFilesView",
+    "onView:upy-bridgeActionsView",
+    "onView:upy-bridgeSyncView",
+    "workspaceContains:.mpyignore",
+    "workspaceContains:boot.py",
+    "workspaceContains:main.py"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "upy-bridge",
+          "title": "uPy Bridge",
+          "icon": "media/activitybar.svg"
+        }
+      ]
+    },
+    "views": {
+      "upy-bridge": [
+        {
+          "id": "upy-bridgeFilesView",
+          "name": "Files",
+          "icon": "$(files)"
+        },
+        {
+          "id": "upy-bridgeActionsView",
+          "name": "Board Actions",
+          "icon": "$(tools)"
+        },
+        {
+          "id": "upy-bridgeSyncView",
+          "name": "Sync utilities",
+          "icon": "$(sync)"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "upy-bridgeFilesView",
+        "contents": "μPython Bridge keeps a folder on this computer in sync with your board, so it needs that folder open.\n\nOpen the folder of your project, or create a new empty folder for it.\n\n[Open Folder](command:vscode.openFolder)\n\nSomething not working? [Open Doctor](command:upy-bridge.doctor)",
+        "when": "workspaceFolderCount == 0"
+      },
+      {
+        "view": "upy-bridgeActionsView",
+        "contents": "μPython Bridge keeps a folder on this computer in sync with your board, so it needs that folder open.\n\nOpen the folder of your project, or create a new empty folder for it.\n\n[Open Folder](command:vscode.openFolder)\n\nSomething not working? [Open Doctor](command:upy-bridge.doctor)",
+        "when": "workspaceFolderCount == 0"
+      },
+      {
+        "view": "upy-bridgeSyncView",
+        "contents": "μPython Bridge keeps a folder on this computer in sync with your board, so it needs that folder open.\n\nOpen the folder of your project, or create a new empty folder for it.\n\n[Open Folder](command:vscode.openFolder)\n\nSomething not working? [Open Doctor](command:upy-bridge.doctor)",
+        "when": "workspaceFolderCount == 0"
+      },
+      {
+        "view": "upy-bridgeFilesView",
+        "contents": "Python was not found or is not working, so the board cannot be reached.\n\nThe Doctor checks your setup and tells you what to fix.\n\n[Open Doctor](command:upy-bridge.doctor)",
+        "when": "workspaceFolderCount > 0 && upy-bridge.interpreterProblem"
+      },
+      {
+        "view": "upy-bridgeFilesView",
+        "contents": "No serial port selected.\n\nPlug your board into a USB port of this computer, then choose its port.\n\n[Select Serial Port](command:upy-bridge.selectPort)",
+        "when": "workspaceFolderCount > 0 && !upy-bridge.hasPort && !upy-bridge.interpreterProblem"
+      }
+    ],
+    "commands": [
+      {
+        "command": "upy-bridge.refresh",
+        "title": "Refresh Board Files",
+        "category": "uPy Bridge",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "upy-bridge.selectPort",
+        "title": "Select Serial Port",
+        "category": "uPy Bridge",
+        "icon": "$(plug)"
+      },
+      {
+        "command": "upy-bridge.runActiveFile",
+        "title": "Run Current File on Board",
+        "category": "uPy Bridge",
+        "icon": "$(play)"
+      },
+      {
+        "command": "upy-bridge.stop",
+        "title": "Stop Program",
+        "category": "uPy Bridge",
+        "icon": "$(debug-stop)"
+      },
+      {
+        "command": "upy-bridge.openRepl",
+        "title": "Open REPL",
+        "category": "uPy Bridge",
+        "icon": "$(terminal)"
+      },
+      {
+        "command": "upy-bridge.resetBoard",
+        "title": "Reset Board...",
+        "category": "uPy Bridge",
+        "icon": "$(debug-restart)"
+      },
+      {
+        "command": "upy-bridge.uploadActiveFile",
+        "title": "Upload Current File to Board",
+        "category": "uPy Bridge",
+        "icon": "$(cloud-upload)"
+      },
+      {
+        "command": "upy-bridge.syncToBoard",
+        "title": "Upload All Files (Local to Board)",
+        "category": "uPy Bridge",
+        "icon": "$(cloud-upload)"
+      },
+      {
+        "command": "upy-bridge.syncFromBoard",
+        "title": "Download All Files (Board to Local)",
+        "category": "uPy Bridge",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "upy-bridge.clearDevice",
+        "title": "Clear Device Files...",
+        "category": "uPy Bridge",
+        "icon": {
+          "light": "media/trash-danger-light.svg",
+          "dark": "media/trash-danger-dark.svg"
+        }
+      },
+      {
+        "command": "upy-bridge.createIgnoreFile",
+        "title": "Create .mpyignore File (Files Not to Copy)",
+        "category": "uPy Bridge",
+        "icon": "$(new-file)"
+      },
+      {
+        "command": "upy-bridge.toggleAutoSync",
+        "title": "Turn Auto-Sync on Save On or Off",
+        "category": "uPy Bridge",
+        "icon": "$(sync)"
+      },
+      {
+        "command": "upy-bridge.openFileFromBoard",
+        "title": "Open File from Board",
+        "category": "uPy Bridge"
+      },
+      {
+        "command": "upy-bridge.openBoardCopy",
+        "title": "Open the Board's Copy (Read-Only)",
+        "category": "uPy Bridge"
+      },
+      {
+        "command": "upy-bridge.newFileOnBoard",
+        "title": "New File (in Your Project and on the Board)...",
+        "category": "uPy Bridge",
+        "icon": "$(new-file)"
+      },
+      {
+        "command": "upy-bridge.newFolderOnBoard",
+        "title": "New Folder (in Your Project and on the Board)...",
+        "category": "uPy Bridge",
+        "icon": "$(new-folder)"
+      },
+      {
+        "command": "upy-bridge.renameOnBoard",
+        "title": "Rename on Board...",
+        "category": "uPy Bridge",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "upy-bridge.deleteOnBoard",
+        "title": "Delete from Board",
+        "category": "uPy Bridge"
+      },
+      {
+        "command": "upy-bridge.deleteOnBoardAndLocal",
+        "title": "Delete from Board and Local",
+        "category": "uPy Bridge",
+        "icon": {
+          "light": "media/trash-danger-light.svg",
+          "dark": "media/trash-danger-dark.svg"
+        }
+      },
+      {
+        "command": "upy-bridge.fixIntelliSense",
+        "title": "Set Up MicroPython IntelliSense...",
+        "category": "uPy Bridge",
+        "icon": "$(lightbulb)"
+      },
+      {
+        "command": "upy-bridge.removeIntelliSense",
+        "title": "Remove μPython Bridge IntelliSense Files...",
+        "category": "uPy Bridge",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "upy-bridge.doctor",
+        "title": "Open Doctor (Check My Setup)",
+        "category": "uPy Bridge",
+        "icon": "$(checklist)"
+      },
+      {
+        "command": "upy-bridge.showLog",
+        "title": "Show Log",
+        "category": "uPy Bridge",
+        "icon": "$(output)"
+      },
+      {
+        "command": "upy-bridge.setBoardClock",
+        "title": "Set the Board Clock from This Computer",
+        "category": "uPy Bridge",
+        "icon": "$(clock)"
+      },
+      {
+        "command": "upy-bridge.syncLegend",
+        "title": "What Do the File Marks Mean?",
+        "category": "uPy Bridge",
+        "icon": "$(question)"
+      },
+      {
+        "command": "upy-bridge.compareWithBoard",
+        "title": "Compare with the Board's Copy",
+        "category": "uPy Bridge",
+        "icon": "$(diff)"
+      },
+      {
+        "command": "upy-bridge.uploadThisFile",
+        "title": "Upload This File to the Board",
+        "category": "uPy Bridge",
+        "icon": "$(arrow-up)"
+      },
+      {
+        "command": "upy-bridge.downloadThisFile",
+        "title": "Download This File to My Project",
+        "category": "uPy Bridge",
+        "icon": "$(arrow-down)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "upy-bridge.refresh",
+          "when": "view == upy-bridgeFilesView",
+          "group": "navigation@0"
+        },
+        {
+          "command": "upy-bridge.selectPort",
+          "when": "view == upy-bridgeFilesView",
+          "group": "navigation@1"
+        },
+        {
+          "command": "upy-bridge.newFileOnBoard",
+          "when": "view == upy-bridgeFilesView",
+          "group": "navigation@2"
+        },
+        {
+          "command": "upy-bridge.newFolderOnBoard",
+          "when": "view == upy-bridgeFilesView",
+          "group": "navigation@3"
+        },
+        {
+          "command": "upy-bridge.syncLegend",
+          "when": "view == upy-bridgeFilesView",
+          "group": "navigation@4"
+        },
+        {
+          "command": "upy-bridge.runActiveFile",
+          "when": "view == upy-bridgeActionsView",
+          "group": "navigation@0"
+        },
+        {
+          "command": "upy-bridge.openRepl",
+          "when": "view == upy-bridgeActionsView",
+          "group": "navigation@1"
+        },
+        {
+          "command": "upy-bridge.stop",
+          "when": "view == upy-bridgeActionsView",
+          "group": "navigation@2"
+        },
+        {
+          "command": "upy-bridge.syncToBoard",
+          "when": "view == upy-bridgeSyncView",
+          "group": "navigation@0"
+        },
+        {
+          "command": "upy-bridge.syncFromBoard",
+          "when": "view == upy-bridgeSyncView",
+          "group": "navigation@1"
+        },
+        {
+          "command": "upy-bridge.clearDevice",
+          "when": "view == upy-bridgeSyncView",
+          "group": "navigation@9"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "upy-bridge.newFileOnBoard",
+          "when": "view == upy-bridgeFilesView && (viewItem == file || viewItem == dir)",
+          "group": "0_create@0"
+        },
+        {
+          "command": "upy-bridge.newFolderOnBoard",
+          "when": "view == upy-bridgeFilesView && (viewItem == file || viewItem == dir)",
+          "group": "0_create@1"
+        },
+        {
+          "command": "upy-bridge.openFileFromBoard",
+          "when": "view == upy-bridgeFilesView && viewItem == file",
+          "group": "1_open@1"
+        },
+        {
+          "command": "upy-bridge.openBoardCopy",
+          "when": "view == upy-bridgeFilesView && viewItem == file",
+          "group": "1_open@2"
+        },
+        {
+          "command": "upy-bridge.compareWithBoard",
+          "when": "view == upy-bridgeFilesView && viewItem == file",
+          "group": "1_open@3"
+        },
+        {
+          "command": "upy-bridge.uploadThisFile",
+          "when": "view == upy-bridgeFilesView && (viewItem == file || viewItem == localFile)",
+          "group": "1_sync@1"
+        },
+        {
+          "command": "upy-bridge.downloadThisFile",
+          "when": "view == upy-bridgeFilesView && viewItem == file",
+          "group": "1_sync@2"
+        },
+        {
+          "command": "upy-bridge.renameOnBoard",
+          "when": "view == upy-bridgeFilesView && (viewItem == file || viewItem == dir)",
+          "group": "2_edit@1"
+        },
+        {
+          "command": "upy-bridge.deleteOnBoard",
+          "when": "view == upy-bridgeFilesView && (viewItem == file || viewItem == dir)",
+          "group": "3_delete@1"
+        },
+        {
+          "command": "upy-bridge.deleteOnBoardAndLocal",
+          "when": "view == upy-bridgeFilesView && (viewItem == file || viewItem == dir)",
+          "group": "3_delete@2"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "upy-bridge.openFileFromBoard",
+          "when": "false"
+        },
+        {
+          "command": "upy-bridge.openBoardCopy",
+          "when": "false"
+        },
+        {
+          "command": "upy-bridge.renameOnBoard",
+          "when": "false"
+        },
+        {
+          "command": "upy-bridge.deleteOnBoard",
+          "when": "false"
+        },
+        {
+          "command": "upy-bridge.deleteOnBoardAndLocal",
+          "when": "false"
+        },
+        {
+          "command": "upy-bridge.compareWithBoard",
+          "when": "false"
+        },
+        {
+          "command": "upy-bridge.uploadThisFile",
+          "when": "false"
+        },
+        {
+          "command": "upy-bridge.downloadThisFile",
+          "when": "false"
+        }
+      ]
+    },
+    "configuration": {
+      "type": "object",
+      "title": "μPython Bridge",
+      "properties": {
+        "upy-bridge.autoSync": {
+          "type": "string",
+          "default": "on",
+          "description": "Upload a file to the board automatically when you save it (D-21: on by default).",
+          "enum": [
+            "on",
+            "off",
+            "ask"
+          ],
+          "enumDescriptions": [
+            "Upload a file to the board every time you save it. A board that was never synced with this folder on this computer is reviewed first, and a board copy that changed since the last sync is never replaced without asking.",
+            "Never upload on save. Use the Sync utilities instead.",
+            "Older setting: ask once, the first time you connect a board in a workspace."
+          ],
+          "scope": "window"
+        },
+        "upy-bridge.board.setClockOnConnect": {
+          "type": "string",
+          "default": "whenUnset",
+          "description": "Set the board's clock from this computer's local time after connecting, so files and data logs the board writes get real dates.",
+          "enum": [
+            "whenUnset",
+            "always",
+            "off"
+          ],
+          "enumDescriptions": [
+            "Set the board's clock from this computer after connecting, but only when the board's clock is not set (it shows a year before 2024).",
+            "Set the board's clock from this computer after every connect.",
+            "Never set the board's clock automatically. The command \"Set the Board Clock from This Computer\" still works."
+          ],
+          "scope": "window"
+        },
+        "upy-bridge.sync.debounceMs": {
+          "type": "number",
+          "default": 400,
+          "description": "How long to wait (in milliseconds) after your last save before uploading, so quick repeated saves send one upload.",
+          "minimum": 100,
+          "maximum": 5000,
+          "scope": "window"
+        },
+        "upy-bridge.rootPath": {
+          "type": "string",
+          "default": "/",
+          "description": "Folder on the board that matches your workspace folder, for example / or /lib. Must start with a slash.",
+          "scope": "window"
+        },
+        "upy-bridge.pythonPath": {
+          "type": "string",
+          "default": "",
+          "description": "Full path of the Python program used to talk to the board. Leave empty to find Python automatically.",
+          "scope": "machine-overridable"
+        },
+        "upy-bridge.port": {
+          "type": "string",
+          "default": "",
+          "description": "Serial port to use, for example COM3 or /dev/cu.usbserial-0001. Leave empty to choose a port from a list.",
+          "scope": "machine-overridable"
+        },
+        "upy-bridge.run.freshStart": {
+          "type": "boolean",
+          "default": true,
+          "description": "Restart Python on the board (a soft reset) before each run, so every run starts clean.",
+          "scope": "window"
+        },
+        "upy-bridge.reset.showUnverifiedHardReset": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show \"Reset with RTS/DTR line\" in the reset menu even when it is not known to work with this board's USB adapter.",
+          "scope": "window"
+        },
+        "upy-bridge.stopOnDisconnect": {
+          "type": "boolean",
+          "default": true,
+          "description": "Stop the running program on the board when the connection closes or VS Code exits. Recommended when motors or other hardware are attached.",
+          "scope": "window"
+        },
+        "upy-bridge.stopOnTerminalClose": {
+          "type": "boolean",
+          "default": true,
+          "description": "Stop the program started by Run when you close the Run window",
+          "scope": "window"
+        },
+        "upy-bridge.intellisenseStubs": {
+          "type": "string",
+          "default": "auto",
+          "description": "Which built-in MicroPython stubs the IntelliSense setup uses when no board is connected: auto (use the connected board; standard Python modules only without one), off, or a board family such as esp32, esp8266, rp2, stm32, samd, nrf or mimxrt.",
+          "scope": "window"
+        },
+        "upy-bridge.intellisenseOffer": {
+          "type": "boolean",
+          "default": true,
+          "description": "After the first successful connection in a workspace, offer to set up MicroPython IntelliSense (code completion and import checking). Turn off to never be asked.",
+          "scope": "window"
+        },
+        "upy-bridge.logLevel": {
+          "type": "string",
+          "default": "info",
+          "description": "How much detail the log shows. Use debug when you are asked to send a log.",
+          "enum": [
+            "debug",
+            "info",
+            "warn",
+            "error"
+          ],
+          "scope": "window"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "node scripts/run-tests.mjs",
+    "lint": "node scripts/run-tests.mjs lint",
+    "gen:manifest": "node scripts/gen-manifest.mjs",
+    "package": "node scripts/package.mjs",
+    "verify": "node scripts/verify.mjs",
+    "test:integration": "node scripts/run-tests.mjs test/integration/",
+    "test:vscode": "node scripts/build.mjs && node scripts/build-vscode-tests.mjs && python3.13 -B tools/vscode_test/launch.py --suite all",
+    "test:vscode:smoke": "node scripts/build.mjs && node scripts/build-vscode-tests.mjs && python3.13 -B tools/vscode_test/launch.py --suite smoke",
+    "test:vscode:python": "node scripts/build.mjs && node scripts/build-vscode-tests.mjs && python3.13 -B tools/vscode_test/launch.py --suite python --with-python-extensions",
+    "test:vscode:coexist": "node scripts/build.mjs && node scripts/build-vscode-tests.mjs && python3.13 -B tools/vscode_test/launch.py --suite coexist --with-old-extension",
+    "test:vscode:intellisense": "node scripts/build.mjs && node scripts/build-vscode-tests.mjs && python3.13 -B tools/vscode_test/launch.py --suite intellisense --with-python-extensions --timeout 280",
+    "test:vscode:intellisense-spikes": "node scripts/build.mjs && node scripts/build-vscode-tests.mjs && python3.13 -B tools/vscode_test/launch.py --suite intellisense-spikes --with-python-extensions --timeout 290"
+  },
+  "dependencies": {
+    "ignore": "7.0.12",
+    "jsonc-parser": "3.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.43",
+    "@types/vscode": "1.90.0",
+    "@vscode/vsce": "4.0.0",
+    "esbuild": "0.28.2",
+    "playwright-core": "1.63.0",
+    "typescript": "5.9.3"
+  }
+}

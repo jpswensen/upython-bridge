@@ -1,0 +1,7 @@
+foreground     on background             ratio    min  use
+bridge-amber   on tile-teal               4.45    3.0  towers and cable of the mark on the tile
+deck-cream     on tile-teal               7.10    3.0  deck and hangers of the mark on the tile
+glyph-on-dark  on vscode-sidebar-dark     9.54    3.0  activity-bar / terminal glyph, dark sidebar (typical VS Code foreground)
+glyph-on-light on vscode-sidebar-light    5.58    3.0  activity-bar / terminal glyph, light sidebar (typical VS Code foreground)
+tile-teal      on surface-white           7.93    3.0  tile edge against a light Marketplace surface
+tile-teal      on surface-near-black      2.10    1.0  tile edge against a dark Marketplace surface (informational, not a rule)

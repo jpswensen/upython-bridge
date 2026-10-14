@@ -1,0 +1,13 @@
+Third-party software vendored in bridge/vendor/ (unmodified; full licence texts in bridge/vendor/licenses/):
+
+- pyserial 3.5 - BSD-3-Clause - Copyright (c) 2001-2020 Chris Liechti <cliechti@gmx.net>
+- mpremote 1.29.0 - MIT - Copyright (c) 2014-2025 Damien P. George and contributors (MicroPython project)
+  Used as a differential-test oracle and for mip/mount/romfs only; never on the board-operation hot path.
+  Portions of bridge/link.py (the serial open/close ordering) are adapted from mpremote's transport_serial.py with attribution.
+- platformdirs 4.3.8 - MIT - Copyright (c) 2010-202x The platformdirs developers (required only by mpremote.main)
+
+Stock MicroPython typing stubs shipped as files under resources/stubs/ (unmodified .pyi files; licence texts in resources/stubs/LICENSES/, hashes in resources/stubs/MANIFEST.json):
+- micropython-stubs (the micropython-<port>-stubs packages, versions listed in MANIFEST.json) - MIT - Copyright (c) 2022 Jos Verlinde (https://github.com/josverl/micropython-stubs)
+- typeshed (the standard library overlay in resources/stubs/stdlib derives from it) - Apache-2.0 / MIT - Copyright (c) Python Software Foundation and typeshed contributors (https://github.com/python/typeshed)
+
+Ported/adapted from MPY Workbench 0.3.2 (MIT, Copyright (c) 2025 Juan Daniel Bustillos Camargo) where noted in the source.
