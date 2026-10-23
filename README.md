@@ -3,8 +3,9 @@
 **Run MicroPython programs on your board, keep your project folder and the board in sync, and get IntelliSense for
 MicroPython and for your board's own firmware: all from VS Code.**
 
-Made for people who are learning to program, on macOS and Windows. It works with stock MicroPython on ESP32, Raspberry Pi
-Pico, STM32 and other boards, and with custom firmware.
+Made for people who are learning to program, on macOS and Windows. It is built for stock MicroPython on ESP32, Raspberry Pi
+Pico, STM32 and other boards, and for custom firmware. See [Tested boards](#tested-boards) for what has been tried on real
+hardware.
 
 ![The μPython Bridge sidebar: the Files view with sync marks, Board Actions and Sync utilities](images/files-and-marks.png)
 
@@ -19,9 +20,10 @@ Pico, STM32 and other boards, and with custom firmware.
 - **Nothing extra to install.** You need Python on your computer, and μPython Bridge finds it by itself. No `mpremote`, no
   `pip install`, no terminal commands.
 
-> **Status: first pre-release (0.1.0).** It has been tested in VS Code on macOS with simulated boards, and its
-> connection layer has been tested with a real ESP32. It has not been tried on Windows or by students yet. If something
-> looks wrong, run **Doctor (check my setup)** and look at the log (see [Troubleshooting](#troubleshooting)).
+> **Status: first pre-release (0.1.0).** It has been used in VS Code on macOS and Windows with an ESP32 board, and its
+> connection to a Raspberry Pi Pico W and to an ESP32-C3 has been tested on macOS (see [Tested boards](#tested-boards)). It
+> has not been used by students yet. If something looks wrong, run **Doctor (check my setup)** and look at the log (see
+> [Troubleshooting](#troubleshooting)).
 
 ## Getting started
 
@@ -176,9 +178,13 @@ Board
   port. Everything else asks it: the views, Run, sync, the REPL and IntelliSense. Requests go through one queue, so a file
   upload can never interleave with a running program. The terminal tab only shows what the helper streams, so closing it
   cannot leave the port in a strange state.
-- **It talks to the board the way MicroPython's own tool does.** The connection code follows `mpremote` (raw REPL, raw paste,
-  the same control-line sequences) and ships `pyserial` inside the extension. It needs nothing installed besides Python
-  (tested on 3.12 to 3.15; 3.9 to 3.11 usually work) and never runs commands through a shell.
+- **It talks to the board the way MicroPython's own tool does.** The connection code is μPython Bridge's own. It is written
+  to follow `mpremote` (raw REPL, raw paste, the same control-line sequences), and small parts of its serial open and close
+  ordering are adapted from it. It does **not** run `mpremote`: it talks to the serial port through `pyserial`, which is
+  shipped inside the extension. A copy of `mpremote` 1.29.0 is also inside the extension, but nothing uses it while you
+  work. The project's tests use it as a reference to compare the bridge's behaviour against, and the Doctor reports its
+  version. The extension needs nothing installed besides Python (tested on 3.12 to 3.15; 3.9 to 3.11 usually work) and
+  never runs commands through a shell.
 - **Run sends the editor's text.** Run does not run "whatever is on the board". It sends the text in your editor through the
   raw REPL, compiled under your file's real path, so error messages point at your file. The file does not have to be on the
   board first, and it is not imported as a module.
@@ -206,6 +212,26 @@ Board
   to PATH".
 - A board running MicroPython, and a USB cable that carries data (some cables only charge).
 - For IntelliSense: the Python extension (it brings Pylance).
+
+## Tested boards
+
+| Board | macOS | Windows | What was checked |
+|---|---|---|---|
+| ESP32 (WROOM module) | Verified | Verified | Used in VS Code on both systems. |
+| Raspberry Pi Pico W, MicroPython 1.29.0 | Verified | Not tried | Automated test with the real board: file transfer, Run and Stop, keystrokes to a running program, the REPL, 20 reconnects, and a soft reset and two `machine.reset()` resets. The Pico has no reset lines on USB, so the hard reset is not offered for it. |
+| ESP32-C3, MicroPython 1.29.0 (`ESP32_GENERIC_C3`) | Verified | Not tried | The same automated test, without the resets. |
+
+The automated test connects to the board the way the extension does, and it only writes to a scratch folder that it removes
+afterwards. The extension's own screens and buttons in VS Code (the views, Run, Stop, sync marks and IntelliSense) have also
+been tested on macOS, with simulated boards.
+
+Good to know:
+
+- **The ESP32-C3 is slow at printing a lot of text**: about 11 KB/s over its built-in USB, so a program that prints
+  thousands of lines will lag behind. Nothing is lost, and file uploads are not affected.
+- **Not tried on a real board yet:** ESP8266, STM32, SAMD, nRF and i.MX RT. IntelliSense stubs are included for them, and
+  other MicroPython boards may work too, but only the boards above have been tested. If you try one, please
+  [tell us how it went](https://github.com/jpswensen/upython-bridge/issues).
 
 ## Settings
 
@@ -279,7 +305,8 @@ VS Code window) and how the screenshots are made. Problems and ideas are welcome
 μPython Bridge is MIT-licensed. It includes these projects, under their own licences (see `NOTICE` and
 `THIRD_PARTY_NOTICES`):
 - [pyserial](https://github.com/pyserial/pyserial) (BSD-3-Clause)
-- [mpremote](https://github.com/micropython/micropython/tree/master/tools/mpremote) from the MicroPython project (MIT)
+- [mpremote](https://github.com/micropython/micropython/tree/master/tools/mpremote) from the MicroPython project (MIT): the
+  connection code follows it, and a copy is included but not run (see [How it's designed](#how-its-designed))
 - the [micropython-stubs](https://github.com/josverl/micropython-stubs) by Jos Verlinde (MIT)
 - [typeshed](https://github.com/python/typeshed) (Apache-2.0 / MIT)
 
