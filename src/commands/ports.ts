@@ -262,9 +262,10 @@ export class PortSelector {
         `${device} is in use by another program. Close Thonny, the Arduino IDE, PlatformIO, a serial monitor, a terminal running mpremote, or another VS Code window that is using the board. Then press Retry.`,
       );
     }
-    const prefix = isBoardError(err, 'E_NO_DEVICE') ? `${device} was not found.` : `Could not connect to ${device}.`;
+    // E_NO_DEVICE covers "not there" and "listed but the driver refused it (EIO)": the bridge's message says which, and names the port.
+    const prefix = `Could not connect to ${device}.`;
     this.services.log.error(prefix, err);
-    return this.askAfterFailure(`${prefix} ${userMessage(err)}`);
+    return this.askAfterFailure(isBoardError(err, 'E_NO_DEVICE') ? userMessage(err) : `${prefix} ${userMessage(err)}`);
   }
 
   /** Retry / Choose another port / Show log. Only the first two are returned; Show log opens the log and asks nothing more. */

@@ -234,11 +234,20 @@ describe('busy and missing ports are explained', () => {
     assert.deepEqual(connects(), ['/dev/cu.usbserial-0001', '/dev/cu.usbserial-0002']);
   });
 
-  it('E_NO_DEVICE says the port was not found, with the bridge hint', async () => {
+  it('E_NO_DEVICE shows the bridge message and hint as they are (not found, or listed but refused)', async () => {
     install([BOARD]);
     h.session.fail('connect', 'E_NO_DEVICE', 'The port does not exist.', { hint: 'Plug the board in.' });
     assert.equal(await select({ reuse: true }), false);
-    assert.match(mock.messages('error')[0]?.message ?? '', /was not found\. The port does not exist\. Plug the board in\./);
+    assert.match(mock.messages('error')[0]?.message ?? '', /^The port does not exist\. Plug the board in\./);
+  });
+
+  it('E_NO_DEVICE for a listed port the driver refused does not claim it was not found', async () => {
+    install([BOARD]);
+    h.session.fail('connect', 'E_NO_DEVICE', '/dev/ttyUSB0 is listed, but the system could not open it (EIO).', { hint: 'Unplug the board.' });
+    assert.equal(await select({ reuse: true }), false);
+    const last = mock.messages('error').at(-1)?.message ?? '';
+    assert.match(last, /listed, but the system could not open it \(EIO\)\. Unplug the board\./);
+    assert.doesNotMatch(last, /was not found/);
   });
 
   it('a bridge that cannot start points to the Doctor', async () => {

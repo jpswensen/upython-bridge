@@ -769,6 +769,40 @@ class ClassifyOpenErrorTests(TimedCase):
         self.assertIn("cable", e.hint)
         self.assertIn("errno=", e.detail)
 
+    def test_eio_on_open_is_listed_but_refused_not_not_found(self):
+        """A Linux student saw "No serial device was found at /dev/ttyUSB0" although ls showed it: errno EIO (and
+        ENXIO/ENODEV/ENOTTY) means the node exists and the driver refused the open. Same code, honest message."""
+        for num in (errno.EIO, errno.ENXIO, errno.ENODEV, errno.ENOTTY):
+            e = classify_open_error(_os_error(num, "Input/output error"), "/dev/ttyUSB0")
+            self.assertEqual(e.code, "E_NO_DEVICE", num)
+            self.assertIn("/dev/ttyUSB0", e.message)
+            self.assertIn(errno.errorcode[num], e.message)          # the errno name is in the toast
+            self.assertNotIn("No serial device was found", e.message)
+            self.assertIn("Unplug", e.hint)
+            self.assertIn("errno=%d" % num, e.detail)
+        for num in (errno.ENOENT, errno.ENOTDIR):                      # genuinely not there: unchanged
+            e = classify_open_error(_os_error(num), "/dev/ttyUSB0")
+            self.assertIn("No serial device was found", e.message)
+            self.assertIn("cable", e.hint)
+
+    def test_eio_hint_mentions_brltty_on_linux_only(self):
+        import unittest.mock as um
+        with um.patch("sys.platform", "linux"):
+            e = classify_open_error(_os_error(errno.EIO), "/dev/ttyUSB0")
+        self.assertIn("brltty", e.hint)
+        self.assertIn("dmesg", e.hint)
+        with um.patch("sys.platform", "darwin"):
+            e = classify_open_error(_os_error(errno.EIO), "/dev/cu.usbserial-0001")
+        self.assertNotIn("brltty", e.hint)
+
+    def test_eio_through_pyserial_text_only(self):
+        """pyserial wraps the OSError: SerialException(errno, 'could not open port ...: [Errno 5] ...')."""
+        import serial
+        exc = serial.SerialException(errno.EIO, "could not open port /dev/ttyUSB0: [Errno 5] Input/output error: '/dev/ttyUSB0'")
+        e = classify_open_error(exc, "/dev/ttyUSB0")
+        self.assertEqual(e.code, "E_NO_DEVICE")
+        self.assertIn("EIO", e.message)
+
 
 class OpenPolicyTableTests(TimedCase):
     """The protocol section 7 table as data (pure)."""

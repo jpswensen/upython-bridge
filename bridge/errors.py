@@ -42,6 +42,7 @@ from __future__ import annotations
 
 import errno as _errno
 import re
+import sys
 
 CODES = (
     "E_PORT_BUSY",
@@ -279,7 +280,28 @@ def _numbers(exc):
     return None, None, None
 
 
-def _make(code, port, detail):
+# errnos that mean "the device node exists (or existed a moment ago) but the driver refused the open", as opposed to
+# ENOENT/ENOTDIR ("there is no such file"). Same code (E_NO_DEVICE), different message and hint.
+_PRESENT_BUT_REFUSED = frozenset(
+    e for e in (getattr(_errno, n, None) for n in ("EIO", "ENXIO", "ENODEV", "ENOTTY")) if e is not None
+)
+
+
+def _refused_hint():
+    """What to try when the port is listed but cannot be opened. Linux has the extra, very common causes."""
+    base = ("Unplug the board, wait a few seconds, plug it in again (try another USB port and a data cable), "
+            "then pick the port again.")
+    if sys.platform.startswith("linux"):
+        return (base + " On Linux this is often brltty (a braille-display service) grabbing USB serial adapters: "
+                "run \"sudo apt remove brltty\" (or \"sudo systemctl disable --now brltty\") and replug. "
+                "Also check \"sudo dmesg | tail -30\" for cp210x/ch341/ftdi errors. If VS Code is a Flatpak or "
+                "Snap, its sandbox can hide /dev or drop your dialout group: install VS Code from the .deb/.rpm "
+                "package on code.visualstudio.com instead (or, for Flatpak, run \"flatpak override --user "
+                "--device=all com.visualstudio.code\" and restart it).")
+    return base
+
+
+def _make(code, port, detail, num=None):
     shown = port if port else "the serial port"
     if code == "E_PORT_BUSY":
         msg = "%s is in use by another program." % shown
@@ -289,6 +311,10 @@ def _make(code, port, detail):
             return BridgeError(code, msg, detail=detail,
                                hint="Check that the server or fake board behind this address is running "
                                     "and that the address is right, then connect again.")
+        if num in _PRESENT_BUT_REFUSED:
+            name = _errno.errorcode.get(num, str(num))
+            return BridgeError(code, "%s is listed, but the system could not open it (%s)." % (shown, name),
+                               detail=detail, hint=_refused_hint())
         msg = "No serial device was found at %s." % shown
     elif code == "E_PERMISSION":
         msg = "You do not have permission to open %s." % shown
@@ -315,7 +341,7 @@ def classify_open_error(exc, port=None):
             if num in _PERMISSION_ERRNOS:
                 return _make("E_PERMISSION", port, detail)
             if num in _NO_DEVICE_ERRNOS:
-                return _make("E_NO_DEVICE", port, detail)
+                return _make("E_NO_DEVICE", port, detail, num)
         if num is None:
             # last-resort identifiers from pyserial's / Python's own wording (also reached for a
             # winerror that is in neither table and came without an errno)

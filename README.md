@@ -270,6 +270,13 @@ you trust the folder.
 5. **A program will not stop, or nothing happens when you press Run.** Press **Stop** once more. If the board still does not
    answer, use **Reset board...**. Then open the log (*μPython Bridge: Show Log* in the Command Palette) and the Doctor: the
    log names the cause of every failure. Copy it into your question when you ask for help.
+6. **Linux: the port is listed but connecting fails with "could not open it (EIO)".** Linux is not an officially supported
+   system yet, but it has been seen to work: Ubuntu 22.04 with VS Code from Microsoft's `.deb` package and your user in the
+   `dialout` group (`sudo usermod -aG dialout $USER`, then log out and in). It did **not** work with the Flatpak build of VS
+   Code (Zorin OS), even with the user in `dialout` and `flatpak run --device=all`, because the Flatpak sandbox does not
+   give VS Code the same access to `/dev` as your own account. Install VS Code from the `.deb`/`.rpm` package or Microsoft's
+   apt repository instead (the Snap build may have the same problem). If it still fails, `sudo systemctl disable --now
+   brltty` (a braille-display service that grabs USB serial adapters), replug the board, and look at `sudo dmesg | tail -30`.
 
 Also worth knowing:
 - A file named like a board module (`time.py`, `machine.py`, `json.py`) is not uploaded, because it would hide the real
