@@ -20,7 +20,7 @@ hardware.
 - **Nothing extra to install.** You need Python on your computer, and μPython Bridge finds it by itself. No `mpremote`, no
   `pip install`, no terminal commands.
 
-> **Status: first pre-release (0.1.0).** It has been used in VS Code on macOS and Windows with an ESP32 board, and its
+> **Status: pre-release (0.1.1).** It has been used in VS Code on macOS and Windows with an ESP32 board, and its
 > connection to a Raspberry Pi Pico W and to an ESP32-C3 has been tested on macOS (see [Tested boards](#tested-boards)). It
 > has not been used by students yet. If something looks wrong, run **Doctor (check my setup)** and look at the log (see
 > [Troubleshooting](#troubleshooting)).

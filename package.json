@@ -2,7 +2,7 @@
   "name": "upython-bridge",
   "displayName": "μPython Bridge",
   "description": "Run MicroPython programs, use the board REPL, keep your files in sync and get IntelliSense for boards running MicroPython, from VS Code.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "jpswensen",
   "icon": "media/icon.png",
   "galleryBanner": {

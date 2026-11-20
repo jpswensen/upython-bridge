@@ -85,7 +85,8 @@ describe('Doctor facts on odd inputs never throw and never print garbage', () =>
 
 describe('the stub packs are found from the INSTALLED location', () => {
   it('extract the real VSIX, change the working directory, use a RELATIVE resources path: the pack loads and verifies', async () => {
-    const vsix = path.join(projectRoot(), 'out', 'upython-bridge-0.1.0.vsix');
+    const { version } = JSON.parse(fs.readFileSync(path.join(projectRoot(), 'package.json'), 'utf8')) as { version: string };
+    const vsix = path.join(projectRoot(), 'out', `upython-bridge-${version}.vsix`);
     if (!fs.existsSync(vsix)) { return; }
     const home = dirs.make('upy-bridge-installed');
     execFileSync('unzip', ['-q', vsix, 'extension/resources/stubs/*', '-d', home], { stdio: 'pipe' });

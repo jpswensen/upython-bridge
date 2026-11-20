@@ -310,7 +310,7 @@ pushed to the default branch (`main`).
 git clone https://github.com/jpswensen/upython-bridge.git && cd upython-bridge
 npm ci                               # exact versions from package-lock.json; install scripts are off (.npmrc)
 npm run package                      # out/upython-bridge-<version>.vsix
-code --install-extension out/upython-bridge-0.1.0.vsix   # or: Command Palette, "Extensions: Install from VSIX..."
+code --install-extension out/upython-bridge-0.1.1.vsix   # or: Command Palette, "Extensions: Install from VSIX..."
 ```
 Nothing else is needed for the VSIX: the stub packs (`resources/stubs/`) and the Python libraries (`bridge/vendor/`) are committed,
 and `.gitattributes` keeps every file byte for byte on every OS (the stubs keep their CRLF line ends and are hashed in
