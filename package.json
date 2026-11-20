@@ -518,6 +518,12 @@
           "description": "Stop the program started by Run when you close the Run window",
           "scope": "window"
         },
+        "upy-bridge.hideEditorButtons": {
+          "type": "boolean",
+          "default": true,
+          "description": "While this extension's sidebar is open, hide the buttons in the top right corner of the editor. This hides the Python extension's Run button, which would run your file on this computer instead of on the board. The buttons come back when you open another sidebar. Uses the workspace setting workbench.editor.editorActionsLocation.",
+          "scope": "window"
+        },
         "upy-bridge.intellisenseStubs": {
           "type": "string",
           "default": "auto",

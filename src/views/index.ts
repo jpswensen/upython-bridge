@@ -11,6 +11,7 @@ import type { BoardChangeSource, SyncStatusSource } from '../types/sync';
 import { ActionsTree } from './actionsView';
 import { ContextKeys } from './contextKeys';
 import { BoardFileDecorations } from './decorations';
+import { EditorToolbarGuard } from './editorToolbar';
 import { FilesTree } from './filesView';
 import { SyncTree } from './syncView';
 
@@ -31,9 +32,14 @@ export function registerViews(services: Services, deps: ViewsDeps = {}): vscode.
   const actions = new ActionsTree(session, settings);
   const sync = new SyncTree(session, settings);
   out.push(files, actions, sync);
-  out.push(vscode.window.createTreeView(VIEWS.files, { treeDataProvider: files, showCollapseAll: true }));
-  out.push(vscode.window.createTreeView(VIEWS.actions, { treeDataProvider: actions }));
-  out.push(vscode.window.createTreeView(VIEWS.sync, { treeDataProvider: sync }));
+  const treeViews = [
+    vscode.window.createTreeView(VIEWS.files, { treeDataProvider: files, showCollapseAll: true }),
+    vscode.window.createTreeView(VIEWS.actions, { treeDataProvider: actions }),
+    vscode.window.createTreeView(VIEWS.sync, { treeDataProvider: sync }),
+  ];
+  out.push(...treeViews);
+  // D-27: while our sidebar is open the editor's top-right buttons are hidden (the Python Run button would run on this computer).
+  out.push(new EditorToolbarGuard({ views: treeViews, settings, state: context.workspaceState, log: log.child('toolbar') }));
 
   // The view-title button and the "try again" row both run this command; other modules call it after they change board files.
   out.push(vscode.commands.registerCommand(COMMAND_IDS.refresh, (arg?: unknown) => {

@@ -540,6 +540,7 @@ function settingsInEffect(s: SettingsReader): { id: string; value: string }[] {
     'reset.showUnverifiedHardReset': String(s.showUnverifiedHardReset), 'stopOnDisconnect': String(s.stopOnDisconnect),
     'stopOnTerminalClose': String(s.stopOnTerminalClose), 'board.setClockOnConnect': s.boardClockOnConnect, 'logLevel': s.logLevel,
     'intellisenseStubs': s.intellisenseStubs, 'intellisenseOffer': String(s.intellisenseOffer),
+    'hideEditorButtons': String(s.hideEditorButtons),
   };
   return SETTINGS.map((spec) => ({ id: settingId(spec.key), value: values[spec.key] }));
 }

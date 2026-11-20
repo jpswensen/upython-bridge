@@ -75,6 +75,8 @@ export interface SessionState {
 export type SessionEvent =
   | { ev: 'state'; state: BoardState; prev: BoardState; reason?: string; port?: string }
   | { ev: 'repl' | 'out' | 'err'; bytes: Uint8Array }
+  /** The board is back at its friendly prompt after the bridge borrowed it; the REPL view shows one if its screen has none. */
+  | { ev: 'prompt' }
   | ({ ev: 'progress' } & Omit<ProgressEvent, 'ev'>)
   | ({ ev: 'log' } & Omit<LogEvent, 'ev'>)
   | ({ ev: 'hello' } & Omit<HelloEvent, 'ev'>)

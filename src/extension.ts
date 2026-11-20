@@ -1,8 +1,9 @@
 /**
  * activate()/deactivate(): build the services in a fixed order, register everything, never throw (docs/extension-design.md s.5).
  *
- * Nothing here touches hardware, spawns Python, opens a port or writes a setting: the bridge starts when the user first
- * needs the board (selecting a port, running, opening the file list), see src/session/index.ts. Everything that must be released
+ * Nothing here touches hardware, spawns Python or opens a port, and the only setting it writes is the editor-toolbar switch
+ * while our sidebar is open (src/views/editorToolbar.ts). The bridge starts when the user first needs the board (selecting a
+ * port, running, opening the file list), see src/session/index.ts. Everything that must be released
  * goes into ONE Teardown pushed to `context.subscriptions`, which VS Code disposes right after deactivate() returns; its order
  * (auto-sync, board session, then the rest, then the log) is in src/lifecycle.ts. There is no module-level state, so deactivate()
  * has nothing of its own to release.

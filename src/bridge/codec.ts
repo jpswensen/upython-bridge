@@ -143,6 +143,8 @@ function decodeEvent(obj: Record<string, unknown>): WireMessage {
       const bytes = bytesOf(obj);
       return bytes ? { kind: 'event', event: { ev, bytes } } : { kind: 'invalid', reason: `${ev} event without valid base64` };
     }
+    case 'prompt':
+      return { kind: 'event', event: { ev: 'prompt' } };
     case 'progress': {
       const progress: Omit<ProgressEvent, 'ev'> = {
         id: typeof obj.id === 'number' || typeof obj.id === 'string' ? obj.id : -1,

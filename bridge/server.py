@@ -24,7 +24,8 @@ CONCURRENCY  while a Run holds the worker, repl.attach/detach (flag only) and di
           overlapping Stops share one Ctrl-C pair (_StopFlight); a run whose Stop was answered by a prompt but whose end
           never arrives is released by the RUN_END_GRACE watchdog and resynchronised (Ctrl-A path, never a reset).
 FILE OPS  _borrow(): Link.session() (pump paused) -> enter_raw WITHOUT soft reset -> exec_fn for devfs -> exit_raw and, when
-          the REPL view is attached, redraw its prompt. The REPL view therefore sees nothing of the borrow.
+          the REPL view is attached, send it a `prompt` event (not a CR: no second prompt is printed). The REPL view
+          therefore sees nothing of the borrow.
           Device snippets run as exec(<snippet>, {}) in a globals dict of their own, because the raw REPL shares __main__
           with the student's REPL (only the `exec` op runs there). tty.write during a borrow is held; the worker replays it
           after the op's response (_replay_held) and relays the echo to the REPL view while it still owns the port.
@@ -40,6 +41,7 @@ from __future__ import annotations
 import base64
 import binascii
 import bisect
+import codecs
 import contextlib
 import json
 import os
@@ -328,6 +330,8 @@ class Server(object):
         self._stop_flight = None
         self._pump_win = b""            # last bytes the pump saw (banner + prompt evidence for state `running` -> `idle`)
         self._pump_t = 0.0
+        self._junk_dec = codecs.getincrementaldecoder("utf-8")("strict")   # idle-stream watcher (see _watch_junk)
+        self._junk_logged = 0.0
         self._rc_lock = threading.Lock()
         self._rc_timer = None
         self.queue = _OpQueue()
@@ -415,6 +419,29 @@ class Server(object):
         if self.repl_attached:
             self._emit_bytes("repl", data)
         self._note_pump(data)
+        self._watch_junk(data)
+
+    def _watch_junk(self, data):
+        """Evidence for "characters that are not text show up in the REPL tab" (student reports, one line of 64 U+FFFD after
+        every prompt). The bridge passes on exactly the bytes the board's serial line delivered while no op owned the port;
+        the tab only turns bytes that are not UTF-8 into U+FFFD. Whether they come from the board, the USB-serial adapter or a
+        program is not knowable from the tab, so the first bytes (hex), what came just before and what the bridge was doing
+        go to the log, at most once per 10 s. Logging only: nothing is filtered or changed."""
+        try:
+            self._junk_dec.decode(data)
+            return
+        except UnicodeDecodeError:
+            self._junk_dec.reset()
+        now = time.monotonic()
+        if now - self._junk_logged < 10.0:
+            return
+        self._junk_logged = now
+        before = self._pump_win[:-len(data)][-24:] if len(data) <= len(self._pump_win) else b""
+        cur = self.current.op if self.current is not None else "-"
+        self.log("warn", "the board sent %d byte(s) that are not text while no operation owned the port "
+                         "(state %s, op %s, run %s): first bytes %s, just before %s"
+                 % (len(data), self.state, cur, "active" if self.run_active else "no",
+                    data[:48].hex(" "), before.hex(" ") or "-"))
 
     def hello(self):
         vend = os.path.join(os.path.dirname(os.path.abspath(__file__)), "vendor", "mpremote")
@@ -928,13 +955,23 @@ class Server(object):
                 cur.cancel.set()
         threading.Thread(target=watch, name="run-watchdog", daemon=True).start()
 
+    def _exit_raw(self, link):
+        """Ctrl-B back to the friendly REPL; True when its prompt was seen. exit_raw swallows the board's own banner and
+        prompt (the REPL view must not see raw-REPL traffic), so with a view attached the view is told with a `prompt` event
+        and decides itself whether its screen already ends with one. Nothing is written to the board for the view's sake:
+        the old "\\r" made the board print a second prompt after every file op (a save did two)."""
+        ok = bool(link.exit_raw(redraw=False))
+        if ok and self.repl_attached:
+            self.emit({"ev": "prompt"})
+        return ok
+
     def _resync(self, link, timeout=RESYNC_TIMEOUT):
         """Bring a board that may still be in the raw REPL back to the friendly one: Ctrl-C, Ctrl-A (re-prints the raw banner,
         never resets), Ctrl-B. Only used after the user pressed Stop. True when the friendly prompt was seen."""
         try:
             with link.session():
                 link.enter_raw(soft_reset=False, timeout=min(max(1.0, timeout), RESYNC_TIMEOUT))
-                return bool(link.exit_raw(redraw=self.repl_attached))
+                return self._exit_raw(link)
         except BridgeError as exc:
             self.log("warn", "could not resynchronise the REPL: %s %s" % (exc.code, exc.detail or exc.message))
             return False
@@ -1141,7 +1178,7 @@ class Server(object):
             finally:
                 if entered:
                     try:
-                        confirmed = bool(link.exit_raw(redraw=self.repl_attached))
+                        confirmed = self._exit_raw(link)
                     except BridgeError as exc:
                         self.log("warn", "could not return to the friendly REPL: %s" % exc.code)
                 if self.state == "rawop":
@@ -1459,7 +1496,7 @@ class Server(object):
                 finally:
                     if entered:
                         try:
-                            confirmed = bool(link.exit_raw(redraw=self.repl_attached))
+                            confirmed = self._exit_raw(link)
                         except BridgeError as exc:
                             self.log("warn", "could not return to the friendly REPL: %s" % exc.code)
                     if entered and confirmed and self.state in ("running", "rawop"):
@@ -1487,7 +1524,7 @@ class Server(object):
             boot = link.enter_raw(soft_reset=True, timeout=10.0)
             if boot:
                 self._on_pump_data(boot)
-            verdict = "prompt" if link.exit_raw() else "prompt-unverified"
+            verdict = "prompt" if self._exit_raw(link) else "prompt-unverified"
         else:
             verdict = link.soft_reset_friendly(wait=3.0, on_data=self._on_pump_data)
         self._running_why = _WHY_BY_VERDICT.get(verdict, "running-program")
@@ -1606,7 +1643,7 @@ class Server(object):
                     confirmed = False
                     if entered and exc.code == "E_UNSUPPORTED":  # machine.reset() raised: the board is fine, back to the prompt
                         try:
-                            confirmed = bool(link.exit_raw(redraw=self.repl_attached))
+                            confirmed = self._exit_raw(link)
                         except BridgeError as exc2:
                             self.log("warn", "could not return to the friendly REPL: %s" % exc2.code)
                     if confirmed:

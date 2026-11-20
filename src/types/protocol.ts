@@ -66,10 +66,12 @@ export interface HelloEvent {
 export interface StateEvent { ev: 'state'; state: BoardState; prev: BoardState; reason?: string; port?: string; error?: ErrorCode }
 /** Bytes events carry base64 on the wire. */
 export interface BytesEvent { ev: 'repl' | 'out' | 'err'; b64: string }
+/** The board is at a fresh friendly prompt that the bridge swallowed (sent only while a REPL view is attached; no bytes). */
+export interface PromptEvent { ev: 'prompt' }
 export interface ProgressEvent { ev: 'progress'; id: number | string; label: string; done: number; total: number }
 export interface LogEvent { ev: 'log'; level: 'debug' | 'info' | 'warn' | 'error'; msg: string }
 export interface FatalEvent { ev: 'fatal'; message: string }
-export type WireEvent = HelloEvent | StateEvent | BytesEvent | ProgressEvent | LogEvent | FatalEvent;
+export type WireEvent = HelloEvent | StateEvent | BytesEvent | PromptEvent | ProgressEvent | LogEvent | FatalEvent;
 
 // ---------------------------------------------------------------- shared result shapes
 

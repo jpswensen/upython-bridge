@@ -51,6 +51,10 @@ hardware.
 - **Stop** sends Ctrl-C twice and works even when the program is busy. It never resets the board. If a program ignores it,
   the message offers **Reset board...**.
 - When the program ends, the same tab is the board's Python prompt (the REPL). **Open REPL** opens it directly.
+- **The ▶ button in the corner of the editor is not ours.** It belongs to the Python extension and runs your file in Python on
+  this computer, where `machine` and the other board modules do not exist. So while the μPython Bridge sidebar is open, the
+  buttons in that corner are hidden (this also hides the split-editor and "..." buttons; they come back when you open another
+  sidebar, such as the Explorer). To keep them, turn off the setting `upy-bridge.hideEditorButtons`.
 - When VS Code closes, a program still running on the board is stopped. Closing the terminal tab stops a program that Run
   started. Both can be turned off in the settings.
 
@@ -247,6 +251,7 @@ Good to know:
 | `upy-bridge.reset.showUnverifiedHardReset` | show the RTS/DTR reset even when it is not known to work |
 | `upy-bridge.stopOnDisconnect` | interrupt the running program when the connection closes (default on) |
 | `upy-bridge.stopOnTerminalClose` | stop the program started by Run when you close its terminal tab (default on) |
+| `upy-bridge.hideEditorButtons` | on (default): while the μPython Bridge sidebar is open, hide the buttons in the top right corner of the editor, the Python extension's Run button among them (it would run your file on this computer). Uses the workspace setting `workbench.editor.editorActionsLocation` and puts it back afterwards |
 | `upy-bridge.intellisenseStubs` | `auto` (default), `off`, or a board family such as `esp32` or `rp2` to use when no board is connected |
 | `upy-bridge.intellisenseOffer` | offer the IntelliSense setup after the first connection (default on) |
 | `upy-bridge.logLevel` | `info` (default), or `debug` when you are asked to send a log |

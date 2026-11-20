@@ -60,6 +60,7 @@ describe('decodeWire', () => {
     assert.deepEqual([...(r.event as { bytes: Uint8Array }).bytes], [104, 105, 13, 10]);
     const s = decodeWire('{"ev":"state","state":"idle","prev":"connecting","reason":"prompt seen","port":"/dev/cu.x"}');
     assert.deepEqual(s, { kind: 'event', event: { ev: 'state', state: 'idle', prev: 'connecting', reason: 'prompt seen', port: '/dev/cu.x' } });
+    assert.deepEqual(decodeWire('{"ev":"prompt"}'), { kind: 'event', event: { ev: 'prompt' } });
     const p = decodeWire('{"ev":"progress","id":7,"label":"x","done":5,"total":10}');
     assert.deepEqual(p, { kind: 'event', event: { ev: 'progress', id: 7, label: 'x', done: 5, total: 10 } });
     const h = decodeWire('{"ev":"hello","proto":1,"bridge":"1","python":"3.13","pyserial":"3.5","platform":"win32","pid":5,"vendored":{"mpremote":null}}');

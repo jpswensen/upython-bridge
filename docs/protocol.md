@@ -71,6 +71,7 @@ All ops are idempotent unless stated. "Queue class" is the priority class from s
 | `hello` | see section 2 | first line |
 | `state` | `state, prev, reason?, port?` | state machine transition (section 5); also emitted on unplug (`disconnected`) |
 | `repl` | `b64` | bytes from the board while the REPL is attached and no bridge op owns the port |
+| `prompt` | (none) | only while a REPL view is attached: a bridge op borrowed the raw REPL and the board is back at its friendly prompt, which the bridge swallowed (2026-11-20). The view shows `>>> ` only if its screen does not already end with one. Replaces the CR the bridge used to write to the board after every borrow, which made the board print a second prompt each time |
 | `out` | `b64` | stdout bytes of a running `run` (raw-REPL stream), unmodified, CRLF as received |
 | `err` | `b64` | the exception/traceback text of a `run` (the raw-REPL stderr channel), emitted when the program ends; tracebacks refer to `name` (the local path) when `compile` was used |
 | `progress` | `id, label, done, total` | long ops (bytes for put/get, files for manifest) |

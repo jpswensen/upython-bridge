@@ -154,6 +154,11 @@ export class ReplTerminal implements TerminalPort, vscode.Disposable {
   private pty: ReplPty | undefined;
   private attached = false;
   private atLineStart = true;
+  /** The text after the last line break that the tab shows (capped): `>>> ` exactly means the screen ends with a bare prompt. */
+  private lineTail = '';
+  /** Between `beginRun` and `endRun`: a `prompt` event waits, so the prompt comes after the `[program finished]` line. */
+  private runShown = false;
+  private promptHeld = false;
   private lastInputError: string | undefined;
   private disposed = false;
   private readonly streams = { repl: new TerminalTextStream(), out: new TerminalTextStream(), err: new TerminalTextStream() };
@@ -209,16 +214,22 @@ export class ReplTerminal implements TerminalPort, vscode.Disposable {
   }
 
   beginRun(label: string): void {
+    this.runShown = true;
     this.writeNotice(`running ${label}`);
   }
 
   endRun(outcome: RunOutcome): void {
+    this.runShown = false;
     if (outcome.kind === 'failed') {
       this.writeNotice(`could not run the program: ${outcome.message}`, 'error');
-      return;
+    } else {
+      const footer = FOOTERS[outcome.exit];
+      this.writeNotice(footer.text, footer.kind);
     }
-    const footer = FOOTERS[outcome.exit];
-    this.writeNotice(footer.text, footer.kind);
+    if (this.promptHeld) {
+      this.promptHeld = false;
+      this.showPrompt();
+    }
   }
 
   dispose(): void {
@@ -245,6 +256,9 @@ export class ReplTerminal implements TerminalPort, vscode.Disposable {
     );
     this.pty = pty;
     this.atLineStart = true;
+    this.lineTail = '';
+    this.runShown = false;
+    this.promptHeld = false;
     for (const s of Object.values(this.streams)) {
       s.flush();
     }
@@ -402,6 +416,13 @@ export class ReplTerminal implements TerminalPort, vscode.Disposable {
       case 'err':
         this.emit(this.streams.err.push(ev.bytes), RED);
         break;
+      case 'prompt':
+        if (this.runShown) {
+          this.promptHeld = true;
+        } else {
+          this.showPrompt();
+        }
+        break;
       case 'state':
         this.onState(ev);
         break;
@@ -435,6 +456,23 @@ export class ReplTerminal implements TerminalPort, vscode.Disposable {
     this.emit(this.streams.err.flush(), RED);
   }
 
+  /**
+   * The bridge borrowed the board (a save, a Run) and it is back at its prompt, which the bridge swallowed. Show one only
+   * when the screen does not already end with it: after a program's output it does not, after a bare prompt it does, and a
+   * half-typed line is left behind on a line of its own. Nothing is sent to the board, so no second prompt can appear.
+   */
+  private showPrompt(): void {
+    if (!this.pty) {
+      return;
+    }
+    this.flushStreams();
+    if (this.lineTail === '>>> ') {
+      return;
+    }
+    this.ensureLineStart();
+    this.emit('>>> ');
+  }
+
   private ensureLineStart(): void {
     if (!this.atLineStart) {
       this.emit('\r\n');
@@ -452,6 +490,7 @@ export class ReplTerminal implements TerminalPort, vscode.Disposable {
     const body = tail ? text.slice(0, tail.index) : text;
     this.pty.write(colour && body !== '' ? `${colour}${body}${RESET}${tail?.[0] ?? ''}` : text);
     this.atLineStart = text.endsWith('\n');
+    this.lineTail = `${this.lineTail}${text}`.split(/\r\n|\r|\n/).pop()!.slice(-64);
   }
 }
 

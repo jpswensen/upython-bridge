@@ -34,6 +34,8 @@ export interface SettingsReader {
   readonly intellisenseStubs: string;
   /** Offer the IntelliSense setup after the first successful connect in a workspace. */
   readonly intellisenseOffer: boolean;
+  /** D-27: hide the editor's top-right buttons (the Python Run button among them) while a sidebar view of ours is open. */
+  readonly hideEditorButtons: boolean;
   readonly logLevel: LogLevel;
 }
 
@@ -140,6 +142,10 @@ export class Settings implements MpySettings, vscode.Disposable {
 
   get intellisenseOffer(): boolean {
     return this.get<boolean>('intellisenseOffer');
+  }
+
+  get hideEditorButtons(): boolean {
+    return this.get<boolean>('hideEditorButtons');
   }
 
   get logLevel(): LogLevel {

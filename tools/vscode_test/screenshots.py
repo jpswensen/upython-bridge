@@ -107,7 +107,13 @@ def main(argv: List[str] | None = None) -> int:
     ap.add_argument("--no-folder", action="store_true", help="open VS Code without a folder: the Open Folder welcome shot only")
     ap.add_argument("--details-check", action="store_true",
                     help="no folder; photograph the extension's details page (the README from the installed VSIX) into the report folder")
+    ap.add_argument("--toolbar-check", action="store_true",
+                    help="needs --with-python-extensions; photograph the editor's top-right buttons (the Python Run button) with the "
+                         "Explorer open, with our sidebar open and with the Explorer again, into the report folder")
     args = ap.parse_args(argv)
+    if args.toolbar_check and not args.with_python_extensions:
+        print("--toolbar-check needs --with-python-extensions (the button belongs to the Python extension)", file=sys.stderr)
+        return 3
     timeout = max(30.0, min(args.timeout, 420.0))
 
     code_bin = L.vscode_binary()
@@ -169,7 +175,7 @@ def main(argv: List[str] | None = None) -> int:
             "args": [f"--user-data-dir={ud}", f"--extensions-dir={dirs['ext']}",
                      "--disable-workspace-trust", "--disable-updates", "--skip-welcome", "--skip-release-notes", "--disable-telemetry",
                      *([] if args.no_folder or args.details_check else [str(ws)])],
-            "noFolder": bool(args.no_folder), "details": bool(args.details_check),
+            "noFolder": bool(args.no_folder), "details": bool(args.details_check), "toolbarCheck": bool(args.toolbar_check),
             "env": env, "out": str(dirs["out"]), "boardRoot": str(board.root_str), "workspace": str(ws),
             "intellisense": bool(args.with_python_extensions), "only": [s for s in args.only.split(",") if s],
             "size": {"width": 1400, "height": 860},

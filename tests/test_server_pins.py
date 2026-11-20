@@ -126,7 +126,8 @@ class HardResetConfirmationTests(BridgeTestCase):
 
 class ReplViewRedrawTests(BridgeTestCase):
     """PINS 02.3 (section 5 idle -> rawop -> idle): a file op borrows the raw REPL; the attached REPL view sees none of the
-    borrow, only the prompt redrawn afterwards, every time."""
+    borrow's bytes. It is told with a `prompt` event afterwards, every time, and NOTHING is written to the board for it: the
+    old CR made the board print a second ">>> " after every borrow (a save, which is two borrows, added two lines)."""
     DEADLINE_S = 90
 
     @staticmethod
@@ -137,7 +138,7 @@ class ReplViewRedrawTests(BridgeTestCase):
         client.call("fs.list", path="/")
         client.wait_event("state", lambda e: e.get("reason") == "_clean_orphans done", 20, since=m)
 
-    def test_the_repl_view_gets_its_prompt_back_after_each_file_op_and_nothing_else(self):
+    def test_the_repl_view_is_told_about_its_prompt_after_each_file_op_and_gets_no_bytes(self):
         board, client, _ = self.connected("esp32")
         client.call("repl.attach")
         client.wait_stream("repl", b">>>", 8)
@@ -147,13 +148,28 @@ class ReplViewRedrawTests(BridgeTestCase):
             client.call("fs.list", path="/")
             self.assertEqual([(e["prev"], e["state"]) for e in client.events_of("state", m)],
                              [("idle", "rawop"), ("rawop", "idle")])
-            client.wait_stream("repl", b">>> ", 8, since=m)               # the redraw: absent when exit_raw(redraw=False)
+            client.wait_event("prompt", lambda e: True, 8, since=m)       # the notice: absent when the helper does not emit it
             client.ping()
-            seen = client.repl_bytes(m)
-            for junk in (b"raw REPL", b"@@", b"MicroPython v", b"OK\x04"):
-                self.assertNotIn(junk, seen, (round_, seen))
+            self.assertEqual(len(client.events_of("prompt", m)), 1, round_)
+            self.assertEqual(client.repl_bytes(m), b"", round_)           # no CR to the board, so no second ">>> " either
         self.assertEqual(board.events.count("soft_reset"), 0)
         self.assertEqual(board.mode, "friendly")
+
+    def test_two_file_ops_in_a_row_put_no_extra_prompt_lines_in_the_view(self):
+        """The reported symptom: saving a file (a put and a manifest compare) added two ">>> " lines to the REPL tab."""
+        board, client, _ = self.connected("esp32")
+        client.call("repl.attach")
+        client.wait_stream("repl", b">>>", 8)
+        self._settle_first_borrow(client)
+        folder = self.local_dir()
+        path = self.write_local(folder, "a.py", "x = 1\n")
+        m = client.mark()
+        client.call("fs.put", local=path, remote="/a.py")
+        client.call("fs.manifest", root="/")
+        client.ping()
+        self.assertEqual(client.repl_bytes(m), b"")
+        self.assertEqual(len(client.events_of("prompt", m)), 2)
+        self.assertEqual(board.events.count("soft_reset"), 0)
 
     def test_a_detached_view_receives_nothing_from_a_file_op(self):
         board, client, _ = self.connected("esp32")
@@ -165,8 +181,41 @@ class ReplViewRedrawTests(BridgeTestCase):
         client.call("fs.list", path="/")
         client.ping()
         self.assertEqual(client.repl_bytes(m), b"")
+        self.assertEqual(client.events_of("prompt", m), [])                  # a detached view is told nothing, either
         client.call("repl.attach")                                           # attaching again redraws a prompt
         client.wait_stream("repl", b">>>", 8, since=m)
+
+
+class IdleJunkIsLoggedTests(TimedTestCase):
+    """Student reports: the REPL tab shows lines of U+FFFD after the prompt while nothing of ours runs. The bridge cannot tell
+    from the tab where such bytes come from, so it logs them (log only: the bytes are still passed on unchanged)."""
+    DEADLINE_S = 30
+
+    def _server(self):
+        from bridge import server
+        srv = server.Server()
+        logged = []
+        srv.log = lambda level, msg: logged.append((level, msg))
+        return srv, logged
+
+    def test_bytes_that_are_not_text_are_logged_once_per_burst_window_with_their_hex(self):
+        srv, logged = self._server()
+        srv._on_pump_data(b"\r\n>>> ")
+        srv._on_pump_data(b"\xff" * 64)
+        self.assertEqual(len(logged), 1, logged)
+        level, msg = logged[0]
+        self.assertEqual(level, "warn")
+        self.assertIn("64 byte(s)", msg)
+        self.assertIn("ff ff ff", msg)
+        self.assertIn("3e 3e 3e 20", msg)                      # what came just before: ">>> "
+        srv._on_pump_data(b"\xff" * 64)                         # same burst window: no second line
+        self.assertEqual(len(logged), 1, logged)
+
+    def test_text_is_never_flagged_not_even_a_character_cut_in_half_by_the_chunking(self):
+        srv, logged = self._server()
+        for chunk in (b"\r\n>>> ", "caf\u00e9 \u2713\r\n".encode("utf-8")[:4], "caf\u00e9 \u2713\r\n".encode("utf-8")[4:]):
+            srv._on_pump_data(chunk)
+        self.assertEqual(logged, [])
 
 
 class ConnectAutoRefusedByTheServerTests(TimedTestCase):

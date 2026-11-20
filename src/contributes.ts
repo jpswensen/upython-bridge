@@ -232,6 +232,10 @@ export const SETTINGS = [
     description: 'Stop the program started by Run when you close the Run window',
   },
   {
+    key: 'hideEditorButtons', type: 'boolean', default: true, scope: 'window',
+    description: 'While this extension\'s sidebar is open, hide the buttons in the top right corner of the editor. This hides the Python extension\'s Run button, which would run your file on this computer instead of on the board. The buttons come back when you open another sidebar. Uses the workspace setting workbench.editor.editorActionsLocation.',
+  },
+  {
     key: 'intellisenseStubs', type: 'string', default: 'auto', scope: 'window',
     description: 'Which built-in MicroPython stubs the IntelliSense setup uses when no board is connected: auto (use the connected board; standard Python modules only without one), off, or a board family such as esp32, esp8266, rp2, stm32, samd, nrf or mimxrt.',
   },

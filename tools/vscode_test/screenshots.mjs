@@ -125,6 +125,34 @@ async function main() {
   await page.waitForSelector('.monaco-workbench', { timeout: 90000 });
   await sleep(5000); // extension host and views settle
 
+  if (cfg.toolbarCheck) {
+    // a check, not a Marketplace image (check-*.png go to the report folder): the editor's top-right buttons (the Python
+    // extension's Run button) and the workspace setting that hides them, with the Explorer open, our sidebar open, Explorer again
+    const settingsText = () => {
+      try { return fs.readFileSync(path.join(cfg.workspace, '.vscode', 'settings.json'), 'utf8'); } catch { return '(no file)'; }
+    };
+    const top = { x: 0, y: 0, width: cfg.size.width, height: 110 };
+    await step('open main.py with the Explorer showing', async () => {
+      await page.locator('.activitybar [aria-label*="Explorer"]').first().click({ timeout: 15000 });
+      await openFile('main.py');
+      await sleep(4000); // the Python extension activates and adds its button
+      log(`  settings.json: ${JSON.stringify(settingsText())}`);
+      await shot('check-toolbar-1-explorer', { clip: top });
+    });
+    await step('open our sidebar: the buttons are hidden', async () => {
+      await page.locator('.activitybar [aria-label*="uPy Bridge"]').first().click({ timeout: 15000 });
+      await sleep(2500);
+      log(`  settings.json: ${JSON.stringify(settingsText())}`);
+      await shot('check-toolbar-2-bridge', { clip: top });
+    });
+    await step('back to the Explorer: the buttons are back', async () => {
+      await page.locator('.activitybar [aria-label*="Explorer"]').first().click({ timeout: 15000 });
+      await sleep(2500);
+      log(`  settings.json: ${JSON.stringify(settingsText())}`);
+      await shot('check-toolbar-3-explorer-again', { clip: top });
+    });
+    return;
+  }
   if (cfg.details) {
     // a check, not a Marketplace image: the README rendered by VS Code's extension page from the INSTALLED VSIX (check-*.png
     // files go to the report folder, never to images/)

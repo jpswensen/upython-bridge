@@ -150,6 +150,68 @@ describe('terminal output', () => {
     }
   });
 
+  describe('the prompt after the bridge borrowed the board (a save, a Run)', () => {
+    const prompts = (t: MockTerminal): number => t.output.split('>>> ').length - 1;
+
+    it('adds nothing when the screen already ends with a prompt (the "two more lines after every save" report)', async () => {
+      const t = await openTerminal();
+      h.session.emit({ ev: 'repl', bytes: enc('\r\n>>> ') });
+      const before = t.output;
+      h.session.emit({ ev: 'prompt' });
+      h.session.emit({ ev: 'prompt' });
+      assert.equal(t.output, before);
+      assert.equal(prompts(t), 1);
+    });
+
+    it('shows one prompt, on its own line, after output that left the screen without one', async () => {
+      const t = await openTerminal();
+      h.session.emit({ ev: 'out', bytes: enc('hello') });
+      h.session.emit({ ev: 'prompt' });
+      h.session.emit({ ev: 'prompt' });
+      assert.match(t.output, /hello\r\n>>> $/);
+      assert.equal(prompts(t), 1);
+    });
+
+    it('leaves a half-typed line behind and starts a fresh prompt below it', async () => {
+      const t = await openTerminal();
+      h.session.emit({ ev: 'repl', bytes: enc('\r\n>>> pri') });
+      h.session.emit({ ev: 'prompt' });
+      assert.match(t.output, />>> pri\r\n>>> $/);
+    });
+
+    it("never swallows the board's own prompts: Enter at a prompt still gets a new one", async () => {
+      const t = await openTerminal();
+      h.session.emit({ ev: 'repl', bytes: enc('\r\n>>> ') });
+      h.session.emit({ ev: 'repl', bytes: enc('\r\n>>> ') });
+      assert.equal(prompts(t), 2);
+    });
+
+    it('waits while a Run is shown, so the prompt comes after the footer and only once', async () => {
+      const t = await openTerminal();
+      h.session.emit({ ev: 'repl', bytes: enc('\r\n>>> ') });
+      term.beginRun('lab.py');
+      h.session.emit({ ev: 'prompt' }); // the bridge borrowed the board before the program started
+      h.session.emit({ ev: 'out', bytes: enc('tick\r\n') });
+      h.session.emit({ ev: 'prompt' }); // the Run's own return to the friendly prompt
+      assert.equal(prompts(t), 1, 'no prompt in the middle of a run');
+      term.endRun({ kind: 'finished', exit: 'ok', durationMs: 5 });
+      assert.match(t.output, /\[running lab\.py\]\x1b\[0m\r\ntick\r\n\x1b\[90m\[program finished\]\x1b\[0m\r\n>>> $/);
+      assert.equal(prompts(t), 2, 'the first one from before the run, one after the footer');
+    });
+
+    it('shows nothing after a Run when no prompt event came (the board did not confirm its prompt)', async () => {
+      const t = await openTerminal();
+      term.beginRun('lab.py');
+      term.endRun({ kind: 'finished', exit: 'disconnected', durationMs: 5 });
+      assert.match(t.output, /\[board disconnected\]\x1b\[0m\r\n$/);
+    });
+
+    it('shows no prompt when the tab is not open', () => {
+      h.session.emit({ ev: 'prompt' });
+      assert.deepEqual(mock.terminals, []);
+    });
+  });
+
   it('says clearly that the board is gone and what to do next', async () => {
     const t = await openTerminal();
     h.session.setState({ state: 'disconnected', port: null, reason: 'unplugged' });

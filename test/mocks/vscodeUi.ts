@@ -77,7 +77,8 @@ export class MockStatusBarItem {
 export interface TreeSnapshotNode { label: string; description?: string; contextValue?: string; children?: TreeSnapshotNode[] }
 
 export class MockTreeView<T> {
-  visible = true;
+  /** Like VS Code: a view whose container is not showing is not visible until the test says so (`setVisible`). */
+  visible = false;
   selection: T[] = [];
   message: string | undefined;
   title: string | undefined;

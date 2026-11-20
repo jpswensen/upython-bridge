@@ -130,7 +130,7 @@ export class StubUi implements SessionUi {
 
 export const SETTINGS = {
   autoSync: 'ask', syncDebounceMs: 400, rootPath: '/', pythonPath: '', portOverride: '', runFreshStart: true, showUnverifiedHardReset: false,
-  stopOnDisconnect: true, stopOnTerminalClose: true, boardClockOnConnect: 'whenUnset', intellisenseStubs: 'auto', intellisenseOffer: true, logLevel: 'debug',
+  stopOnDisconnect: true, stopOnTerminalClose: true, boardClockOnConnect: 'whenUnset', intellisenseStubs: 'auto', intellisenseOffer: true, hideEditorButtons: true, logLevel: 'debug',
 } as const;
 
 export function makeSession(over: Partial<SessionDeps> & { bridge?: ScriptedBridge; ui?: StubUi } = {}) {

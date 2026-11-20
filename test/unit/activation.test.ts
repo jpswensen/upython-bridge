@@ -13,6 +13,7 @@ import { IDENTITY, LEGACY, settingId } from '../../src/identity';
 import { createExtensionContext, type MockExtensionContext } from '../mocks/extensionContext';
 import { TempDirs } from '../mocks/fixtures';
 import { mock } from '../mocks/vscode';
+import { ConfigurationTarget } from '../mocks/vscodeCore';
 import { AUTO_SYNC_CHOICE_KEY, Settings } from '../../src/types/settings';
 
 const dirs = new TempDirs();
@@ -130,6 +131,20 @@ describe('activate() in a normal local window', () => {
     assert.match(String(item.label), /Connect to \/dev\/cu\.fakeport/);
     assert.deepEqual(spawned, []);
     assert.equal(mock.config.updates.length, 0);
+  });
+
+  it('with the sidebar already showing, the only thing written is the editor-toolbar switch (D-27), and it is written to the workspace', async () => {
+    openWorkspace();
+    mock.config.register('workbench.editor.editorActionsLocation', 'default');
+    start();
+    await settle(80);
+    for (const id of [VIEWS.files, VIEWS.actions, VIEWS.sync]) {
+      mock.treeViews.get(id)?.setVisible(true);
+    }
+    await settle(80);
+    assert.deepEqual(mock.config.updates.map((u) => [u.key, u.value, u.target]),
+      [['workbench.editor.editorActionsLocation', 'hidden', ConfigurationTarget.Workspace]]);
+    assert.deepEqual(spawned, [], 'still no process');
   });
 
   it('never writes the word auto anywhere', async () => {
