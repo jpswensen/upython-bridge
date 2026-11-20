@@ -313,6 +313,10 @@ describe('D-21 connect while the board is busy (instructor report 2026-10-13: "2
     kit.sync.start();
     await kit.session.connect('/dev/cu.fake');
     await waitFor(() => kit.sync.auto.sending(), 'auto-sync to send to this board');
+    // The save must come AFTER the comparison at connect has looked at a.py: it records "identical" in the baseline. A save that
+    // lands first makes the comparison see v2 against the board's v1 with no history, and refusing to replace a board copy
+    // nobody synced is the right answer then (D-21). Before this wait the test passed or failed with the timing of the run.
+    await waitFor(() => kit.sync.badgeFor('/a.py') === 'in-sync', 'the comparison at connect to find a.py identical on both sides');
     await save(kit, 'a.py', 'v2\n');
     kit.scheduler.runAll();
     await waitFor(() => kit.session.boardFs?.read('/a.py') === 'v2\n', 'the save on the board');
